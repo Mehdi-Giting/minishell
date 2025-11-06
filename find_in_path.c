@@ -6,7 +6,7 @@
 /*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 23:09:02 by mehdi             #+#    #+#             */
-/*   Updated: 2025/11/06 00:28:51 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/11/06 04:19:55 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,13 @@ static int	check_for_absolut_path(const char *cmd)
 	return (0);
 }
 
-char	*find_in_path(const char *cmd)
+static char	*final_path_(const char *cmd)
 {
-	char	*final_path;
-	char	*tmp;
 	char	**path;
+	char	*tmp;
+	char	*final_path;
 	int		i;
 
-	if (check_for_absolut_path(cmd))
-	{
-		if (access(cmd, X_OK) == 0)
-		{
-			final_path = malloc(sizeof(char) * (ft_strlen(cmd) + 1));
-			ft_strlcpy(final_path, cmd, ft_strlen(cmd) + 1);
-			return (final_path);
-		}
-		else
-			return (NULL);
-	}
 	i = 0;
 	if (!getenv("PATH"))
 		return (NULL);
@@ -64,5 +53,24 @@ char	*find_in_path(const char *cmd)
 		i++;
 	}
 	ft_free_tab(path);
-	return (NULL);	
+	return (NULL);
+}
+
+char	*find_in_path(const char *cmd)
+{
+	char	*final_path;
+
+	if (check_for_absolut_path(cmd))
+	{
+		if (access(cmd, X_OK) == 0)
+		{
+			final_path = malloc(sizeof(char) * (ft_strlen(cmd) + 1));
+			ft_strlcpy(final_path, cmd, ft_strlen(cmd) + 1);
+			return (final_path);
+		}
+		else
+			return (NULL);
+	}
+	final_path = final_path_(cmd);
+	return (final_path);
 }
