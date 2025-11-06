@@ -6,7 +6,7 @@
 /*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
-/*   Updated: 2025/11/06 00:26:23 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/11/06 05:01:44 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,41 @@ int	main(int argc, char **argv, char **envp)
 	pid_t	child;
 	pid_t	status;
 	char	*path;
+	char	*tmp;
+	char	*comand_line;
 	char	**args;
 
-	if (argc > 1)
+	(void)argv;
+	(void)argc;
+	while (1)
 	{
-		child = fork();
-		if (child == 0)
-		{	
-			args = ft_split(argv[1], ' ');
-			path = find_in_path(args[0]);
-			if (!path)
-			{
-				perror("path");
-				exit(1);
-			}
-			execve(path, args, envp);
+		ft_printf("minishel$ ");
+		tmp = get_next_line(STDIN_FILENO);
+		comand_line = ft_strtrim(tmp, "\n");
+		free(tmp);
+		if (ft_strncmp(comand_line, "exit", ft_strlen("exit")) == 0)
+			break ;
+		args = ft_split(comand_line, ' ');
+		path = find_in_path(args[0]);
+		if (!path)
+		{
+			printf("%s", args[0]);
+			free(comand_line);
 			ft_free_tab(args);
 			free(path);
-			perror("execve");
-			exit(1);
+			perror("path");
+		}
+		else
+		{
+			child = fork();
+			if (child == 0)
+			{
+				execve(path, args, envp);
+				ft_free_tab(args);
+				free(path);
+				perror("execve");
+				exit(1);
+			}
 		}
 		waitpid(child, &status, 0);
 		if (WIFEXITED(status))
