@@ -5,7 +5,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 RM = rm -f
 
-SRCS = main.c find_in_path.c execution.c
+SRCS = main.c find_in_path.c execution.c redirections.c
 
 OBJS = $(SRCS:.c=.o)
 

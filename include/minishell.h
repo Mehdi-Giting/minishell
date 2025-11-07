@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/11/07 07:21:11 by marvin           ###   ########.fr       */
+/*   Updated: 2025/11/07 23:22:39 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,6 @@ typedef struct	s_cmd
 
 char	*find_in_path(const char *cmd);
 int		execute_command(t_cmd *cmd, char **envp);
+void	apply_redirections(t_redir *redirections);
 
 #endif
