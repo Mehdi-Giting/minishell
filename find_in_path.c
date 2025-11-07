@@ -6,7 +6,7 @@
 /*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 23:09:02 by mehdi             #+#    #+#             */
-/*   Updated: 2025/11/06 04:19:55 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/11/07 00:14:46 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,10 @@
 
 static int	check_for_absolut_path(const char *cmd)
 {
-	char	frontslash;
-	int		i;
-
-	frontslash = '/';
-	i = 0;
-	while (cmd[i])
-	{
-		if (cmd[i] == frontslash)
-			return (1);
-		else
-			i++;
-	}
-	return (0);
+	return (ft_strchr(cmd, '/') != NULL);
 }
 
-static char	*final_path_(const char *cmd)
+static char	*resolve_path_from_env(const char *cmd)
 {
 	char	**path;
 	char	*tmp;
@@ -50,6 +38,7 @@ static char	*final_path_(const char *cmd)
 			ft_free_tab(path);
 			return (final_path);
 		}
+		free(final_path);
 		i++;
 	}
 	ft_free_tab(path);
@@ -71,6 +60,6 @@ char	*find_in_path(const char *cmd)
 		else
 			return (NULL);
 	}
-	final_path = final_path_(cmd);
+	final_path = resolve_path_from_env(cmd);
 	return (final_path);
 }
