@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/11/07 01:22:47 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/11/07 07:21:11 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define MINISHELL_H
 # include "../libft/libft.h"
 # include <sys/wait.h>
+
+typedef struct s_redir	t_redir;
+typedef struct s_cmd	t_cmd;
 
 typedef enum e_redir_type {
     R_IN,      // <
@@ -33,10 +36,11 @@ typedef struct	s_cmd
 {
 	char	**argv;
 	int		is_builtin;
-	t_redir	*redirection;
+	t_redir	*redirections;
 	t_cmd	*next;
 }	t_cmd;
 
 char	*find_in_path(const char *cmd);
+int		execute_command(t_cmd *cmd, char **envp);
 
 #endif

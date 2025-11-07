@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
-/*   Updated: 2025/11/07 01:02:24 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/11/07 07:25:49 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,14 @@ int	main(int argc, char **argv, char **envp)
 {
 	(void)argv;
 	(void)argc;
-	while (1)
-	{
-		ft_printf("minishel$ ");
-		// implement execute_command(t_cmd *cmd, char **envp)
+	t_cmd cmd;
 
-	}
+	cmd.argv = (char *[]){"ls", "-la", NULL};
+	cmd.is_builtin = 0;
+	cmd.redirections = NULL;
+	cmd.next = NULL;
+
+	ft_printf("minishel$ ");
+	execute_command(&cmd, envp);
 	return (0);
 }

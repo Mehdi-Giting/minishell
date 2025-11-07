@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_in_path.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 23:09:02 by mehdi             #+#    #+#             */
-/*   Updated: 2025/11/07 00:14:46 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/11/07 06:59:20 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,16 @@ char	*find_in_path(const char *cmd)
 			return (final_path);
 		}
 		else
-			return (NULL);
+		{
+			ft_printf("command not found\n");
+			exit(127);
+		}
 	}
 	final_path = resolve_path_from_env(cmd);
+	if (!final_path)
+	{
+		ft_printf("command not found\n");
+		exit(127);
+	}
 	return (final_path);
 }
