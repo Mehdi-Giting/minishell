@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 06:37:05 by marvin            #+#    #+#             */
-/*   Updated: 2025/11/07 22:28:40 by marvin           ###   ########.fr       */
+/*   Updated: 2025/11/09 07:24:14 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	run_command(t_cmd *cmd, char **envp)
 	int		status;
 	
 	child = fork();
-	if (child < 0)
+	if (child == -1)
 	{
 		perror("fork");
 		return (1);
@@ -53,6 +53,12 @@ int	execute_command(t_cmd *cmd, char **envp)
 	{
 		//implement built in
 	}
-	status = run_command(cmd, envp);
+	else if (cmd->next)
+	{
+		execute_pipeline(cmd, envp);
+		status = 0;
+	}
+	else
+		status = run_command(cmd, envp);
 	return (status);
 }

@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
-/*   Updated: 2025/11/07 23:31:16 by marvin           ###   ########.fr       */
+/*   Updated: 2025/11/09 04:59:57 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,32 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	(void)argv;
 	(void)argc;
-	t_cmd cmd;
-	t_redir in;
+	(void)argv;
 
-	in.type = R_IN;
-	in.file = "input.txt";
-	in.next = NULL;
+	// ---- Single command ----
+	// t_cmd cmd;
+	// cmd.argv = (char *[]){"ls", "-l", NULL};
+	// cmd.is_builtin = 0;
+	// cmd.redirections = NULL;
+	// cmd.next = NULL;
+	// execute_command(&cmd, envp);
 
-	cmd.argv = (char *[]){"cat", NULL};
-	cmd.is_builtin = 0;
-	cmd.redirections = &in;
-	cmd.next = NULL;
+	// ---- Pipeline: ls | wc -l ----
+	t_cmd cmd1;
+	t_cmd cmd2;
 
-	// ft_printf("minishel$> ");
-	execute_command(&cmd, envp);
+	cmd1.argv = (char *[]){"ls", NULL};
+	cmd1.is_builtin = 0;
+	cmd1.redirections = NULL;
+	cmd1.next = &cmd2;
+
+	cmd2.argv = (char *[]){"wc", "-l", NULL};
+	cmd2.is_builtin = 0;
+	cmd2.redirections = NULL;
+	cmd2.next = NULL;
+
+	execute_command(&cmd1, envp);
+
 	return (0);
 }
