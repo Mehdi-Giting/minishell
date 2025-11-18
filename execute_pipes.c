@@ -6,29 +6,11 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 04:38:52 by marvin            #+#    #+#             */
-/*   Updated: 2025/11/09 11:39:06 by marvin           ###   ########.fr       */
+/*   Updated: 2025/11/15 08:51:20 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
-
-void	pipe_child(t_cmd *cmd, char **envp, int *fd)
-{
-	pid_t	child;
-
-	child = fork();
-	if (child == -1)
-	{
-		perror("fork");
-		exit(1);
-	}
-	if (child == 0)
-	{
-		apply_redirections(cmd->redirections);
-		child_command(cmd, envp);
-	}
-	wait(NULL);
-}
 
 void	execute_pipeline(t_cmd *cmds, char **envp)
 {
