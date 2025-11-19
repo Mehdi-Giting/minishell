@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 04:38:52 by marvin            #+#    #+#             */
-/*   Updated: 2025/11/15 08:51:20 by marvin           ###   ########.fr       */
+/*   Updated: 2025/11/19 17:07:27 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,36 @@ void	execute_pipeline(t_cmd *cmds, char **envp)
     			dup2(previous_read, STDIN_FILENO);
 			if (current->next)
     			dup2(pipe_fd[1], STDOUT_FILENO);
+
+			if (previous_read != -1)
+    			close(previous_read);
+			
+			if (current->next)
+			{
+				close(pipe_fd[0]);
+				close(pipe_fd[1]);
+			}
+
+			apply_redirections(current->redirections);
+			child_command(current, envp);
 		}
+		else
+		{
+			if (previous_read != -1)
+				close(previous_read);
+
+			if (current->next)
+			{
+				close(pipe_fd[1]);
+				previous_read = pipe_fd[0];
+			}
+			else
+				previous_read = -1;
+		}
+
+		//attendre pour ne pas avoir de zombie
+		while (wait(NULL) > 0)
+			;
 		
 		current = current->next;
 	}

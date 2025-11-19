@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
-/*   Updated: 2025/11/09 04:59:57 by marvin           ###   ########.fr       */
+/*   Updated: 2025/11/19 17:10:53 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	main(int argc, char **argv, char **envp)
 	cmd1.redirections = NULL;
 	cmd1.next = &cmd2;
 
-	cmd2.argv = (char *[]){"wc", "-l", NULL};
+	cmd2.argv = (char *[]){"grep", ".c", NULL};
 	cmd2.is_builtin = 0;
 	cmd2.redirections = NULL;
 	cmd2.next = NULL;
