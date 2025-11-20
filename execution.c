@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 06:37:05 by marvin            #+#    #+#             */
-/*   Updated: 2025/11/09 07:24:14 by marvin           ###   ########.fr       */
+/*   Updated: 2025/11/20 17:19:25 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	run_command(t_cmd *cmd, char **envp)
 {
 	pid_t	child;
 	int		status;
-	
+
 	child = fork();
 	if (child == -1)
 	{

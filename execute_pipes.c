@@ -6,81 +6,85 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 04:38:52 by marvin            #+#    #+#             */
-/*   Updated: 2025/11/19 17:07:27 by marvin           ###   ########.fr       */
+/*   Updated: 2025/11/20 17:21:01 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//p_r stand for previous read, to please the norm i had to squiz the name
+
 #include "include/minishell.h"
+
+static void	fd_manager(t_cmd *current, int	*pipe_fd)
+{
+	if (current->next)
+	{
+		if (pipe(pipe_fd) == -1)
+		{
+			perror("pipe");
+			exit(1);
+		}
+	}
+	else
+	{
+		pipe_fd[0] = -1;
+		pipe_fd[1] = -1;
+	}
+}
+
+static void	child_processe(t_cmd *current, int p_r, int *pipe_fd, char **envp)
+{
+	if (p_r != -1)
+		dup2(p_r, STDIN_FILENO);
+	if (current->next)
+		dup2(pipe_fd[1], STDOUT_FILENO);
+	if (p_r != -1)
+		close(p_r);
+	if (current->next)
+	{
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+	}
+	apply_redirections(current->redirections);
+	child_command(current, envp);
+}
+
+static void	parrent_processe(t_cmd *current, int *p_r, int *pipe_fd)
+{
+	if (*p_r != -1)
+		close(*p_r);
+	if (current->next)
+	{
+		close(pipe_fd[1]);
+		*p_r = pipe_fd[0];
+	}
+	else
+		*p_r = -1;
+}
 
 void	execute_pipeline(t_cmd *cmds, char **envp)
 {
 	t_cmd	*current;
-	int		previous_read;
+	int		p_r;
 	int		pipe_fd[2];
 	pid_t	pid;
 
 	current = cmds;
-	previous_read = -1;
+	p_r = -1;
 	while (current)
 	{
-		if (current->next)
-		{
-			if (pipe(pipe_fd) == -1)
-			{
-				perror("pipe");
-				exit(1);
-			}
-		}
-		else
-		{
-			pipe_fd[0] = -1;
-			pipe_fd[1] = -1;
-		}
-
+		fd_manager(current, pipe_fd);
 		pid = fork();
 		if (pid == -1)
 		{
 			perror("fork");
 			exit(1);
 		}
-
 		if (pid == 0)
-		{
-			if (previous_read != -1)
-    			dup2(previous_read, STDIN_FILENO);
-			if (current->next)
-    			dup2(pipe_fd[1], STDOUT_FILENO);
-
-			if (previous_read != -1)
-    			close(previous_read);
-			
-			if (current->next)
-			{
-				close(pipe_fd[0]);
-				close(pipe_fd[1]);
-			}
-
-			apply_redirections(current->redirections);
-			child_command(current, envp);
-		}
+			child_processe(current, p_r, pipe_fd, envp);
 		else
-		{
-			if (previous_read != -1)
-				close(previous_read);
-
-			if (current->next)
-			{
-				close(pipe_fd[1]);
-				previous_read = pipe_fd[0];
-			}
-			else
-				previous_read = -1;
-		}
-
-		//attendre pour ne pas avoir de zombie
-		while (wait(NULL) > 0)
-			;
-		
+			parrent_processe(current, &p_r, pipe_fd);
 		current = current->next;
 	}
+	while (wait(NULL) > 0)
+		;
 }

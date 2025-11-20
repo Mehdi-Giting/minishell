@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
-/*   Updated: 2025/11/19 17:10:53 by marvin           ###   ########.fr       */
+/*   Updated: 2025/11/20 17:24:28 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	main(int argc, char **argv, char **envp)
 	// ---- Pipeline: ls | wc -l ----
 	t_cmd cmd1;
 	t_cmd cmd2;
+	t_cmd cmd3;
 
 	cmd1.argv = (char *[]){"ls", NULL};
 	cmd1.is_builtin = 0;
@@ -37,7 +38,12 @@ int	main(int argc, char **argv, char **envp)
 	cmd2.argv = (char *[]){"grep", ".c", NULL};
 	cmd2.is_builtin = 0;
 	cmd2.redirections = NULL;
-	cmd2.next = NULL;
+	cmd2.next = &cmd3;
+
+	cmd3.argv = (char *[]){"wc", "-l", NULL};
+	cmd3.is_builtin = 0;
+	cmd3.redirections = NULL;
+	cmd3.next = NULL;
 
 	execute_command(&cmd1, envp);
 
