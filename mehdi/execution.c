@@ -6,20 +6,20 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 06:37:05 by marvin            #+#    #+#             */
-/*   Updated: 2025/11/20 17:19:25 by marvin           ###   ########.fr       */
+/*   Updated: 2025/11/30 16:50:09 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../include/minishell.h"
 
 void	child_command(t_cmd *cmd, char **envp)
 {
 	char	*path;
 
-	path = find_in_path(cmd->argv[0]);
+	path = find_in_path(cmd->tokens[0]);
 	if (!path)
 		exit (127);
-	execve(path, cmd->argv, envp);
+	execve(path, cmd->tokens, envp);
 	perror("execve");
 	free(path);
 	exit(126);

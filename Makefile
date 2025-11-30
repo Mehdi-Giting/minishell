@@ -2,10 +2,23 @@
 
 NAME = minishell
 CC = cc
+
 CFLAGS = -Wall -Wextra -Werror
+LDFLAGS = -lreadline -lncurses
+
 RM = rm -f
 
-SRCS = main.c find_in_path.c execution.c redirections.c execute_pipes.c
+SRCS = main.c mehdi/find_in_path.c \
+	   mehdi/execution.c \
+	   mehdi/redirections_exec.c \
+	   mehdi/execute_pipes.c \
+	   kais/built.c \
+	   kais/read_command.c \
+	   kais/redir2.c \
+	   kais/redirection.c \
+	   kais/split.c \
+	   kais/tokens.c \
+	   kais/utils.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -20,7 +33,7 @@ $(LIBFT):
 
 $(NAME): $(OBJS) $(LIBFT)
 	@echo "🧩 Linking $(NAME)..."
-	@$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft -o $(NAME)
+	@$(CC) $(OBJS) -L$(LIBFT_DIR) -lft $(LDFLAGS) -o $(NAME)
 	@echo "✅ Build complete!"
 
 clean:

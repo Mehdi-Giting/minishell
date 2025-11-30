@@ -6,11 +6,11 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 22:16:34 by marvin            #+#    #+#             */
-/*   Updated: 2025/11/07 23:26:40 by marvin           ###   ########.fr       */
+/*   Updated: 2025/11/30 16:50:19 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../include/minishell.h"
 
 void	open_files(t_redir *current)
 {

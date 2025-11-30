@@ -6,13 +6,13 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 04:38:52 by marvin            #+#    #+#             */
-/*   Updated: 2025/11/20 17:21:01 by marvin           ###   ########.fr       */
+/*   Updated: 2025/11/30 16:50:03 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //p_r stand for previous read, to please the norm i had to squiz the name
 
-#include "include/minishell.h"
+#include "../include/minishell.h"
 
 static void	fd_manager(t_cmd *current, int	*pipe_fd)
 {

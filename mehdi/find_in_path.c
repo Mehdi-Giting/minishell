@@ -6,11 +6,11 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 23:09:02 by mehdi             #+#    #+#             */
-/*   Updated: 2025/11/07 06:59:20 by marvin           ###   ########.fr       */
+/*   Updated: 2025/11/30 16:50:12 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../include/minishell.h"
 
 static int	check_for_absolut_path(const char *cmd)
 {
