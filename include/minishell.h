@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/04 02:47:35 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/04 06:21:16 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,20 +55,21 @@ typedef struct	s_cmd
 
 //---Mehdi
 char	*find_in_path(const char *cmd);
-int		execute_command(t_cmd *cmd, char **envp);
+int		execute_command(t_cmd *cmd, char ***my_env);
 void	apply_redirections(t_redir *redirections);
-void	child_command(t_cmd *cmd, char **envp);
-void	execute_pipeline(t_cmd *cmds, char **envp);
+void	child_command(t_cmd *cmd, char **my_env);
+void	execute_pipeline(t_cmd *cmds, char **my_env);
 
-int		exec_builtin(t_cmd *cmd, char **envp);
+int		exec_builtin(t_cmd *cmd, char ***my_env);
 int		ft_pwd();
 int		ft_echo(char **argv);
 int		ft_cd(char **argv);
-int		ft_env(char **argv, char **envp);
-int		ft_export(char **argv, char **envp);
+int		ft_env(char **argv, char **my_env);
+int		ft_export(char **argv, char ***my_env);
+char	**ft_tabdup(char **my_env);
+char	**ft_tabdup_add(char **my_env, const char *new_key);
 
 //---Kais
-
 char	**split_command(char *line);
 void	free_tokens(char **tokens);
 char	*read_command(char *prompt);

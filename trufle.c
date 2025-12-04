@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/04 02:48:20 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/04 06:27:15 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,28 @@
 
 int	main(int argc, char **argv, char **envp)
 {
+	char	**my_env;
+
 	(void)argc;
-	(void)argv;
+	(void)argv;	
+	my_env = ft_tabdup(envp);
 
 	// ---- Single command ----
 	t_cmd cmd;
-	cmd.tokens = (char *[]){"export", "SHELL=mine", NULL};
+	cmd.tokens = (char *[]){"export", "LOULOU=pasbeau", NULL};
 	cmd.is_builtin = 1;
 	cmd.redirections = NULL;
 	cmd.next = NULL;
-	execute_command(&cmd, envp);
+	execute_command(&cmd, &my_env);
 
+	ft_printf("---- ENV AFTER EXPORT ----\n");
+	int i = 0;
+	while (my_env[i])
+	{
+		ft_printf("%s\n", my_env[i]);
+		i++;
+	}
+	ft_free_tab(my_env);
 	// ---- Pipeline: ls | wc -l ----
 	// t_cmd cmd1;
 	// t_cmd cmd2;
@@ -44,18 +55,7 @@ int	main(int argc, char **argv, char **envp)
 	// cmd3.is_builtin = 0;
 	// cmd3.redirections = NULL;
 	// cmd3.next = NULL;
-	// execute_command(&cmd1, envp);
+	// execute_command(&cmd1, my_env);
 
 	return (0);
 }
-
-//1er split, split par pipe '|'
-
-//liste de command ; "ls " [0] " wc -l " [1] " grep .c" [2] NULL [3]
-
-
-//2eme split, split par espace ' '
-
-// 1er command ls [0] NULL [1]
-// 2eme command grep [0] .c [1] NULL [2]
-// 3eme command wc [0] -l [1] NULL [2]

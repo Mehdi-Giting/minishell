@@ -21,6 +21,7 @@ SRCS = trufle.c \
 	   mehdi/builtin_list/ft_export.c \
 	   mehdi/builtin_list/ft_pwd.c \
 	   mehdi/builtin_list/ft_unset.c \
+	   mehdi/builtin_list/utils.c \
 	   kais/built.c \
 	   kais/read_command.c \
 	   kais/redir2.c \

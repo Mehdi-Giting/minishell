@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 04:38:52 by marvin            #+#    #+#             */
-/*   Updated: 2025/11/30 16:50:03 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/04 05:53:13 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	fd_manager(t_cmd *current, int	*pipe_fd)
 	}
 }
 
-static void	child_processe(t_cmd *current, int p_r, int *pipe_fd, char **envp)
+static void	child_processe(t_cmd *current, int p_r, int *pipe_fd, char **my_env)
 {
 	if (p_r != -1)
 		dup2(p_r, STDIN_FILENO);
@@ -45,7 +45,7 @@ static void	child_processe(t_cmd *current, int p_r, int *pipe_fd, char **envp)
 		close(pipe_fd[1]);
 	}
 	apply_redirections(current->redirections);
-	child_command(current, envp);
+	child_command(current, my_env);
 }
 
 static void	parrent_processe(t_cmd *current, int *p_r, int *pipe_fd)
@@ -61,7 +61,7 @@ static void	parrent_processe(t_cmd *current, int *p_r, int *pipe_fd)
 		*p_r = -1;
 }
 
-void	execute_pipeline(t_cmd *cmds, char **envp)
+void	execute_pipeline(t_cmd *cmds, char **my_env)
 {
 	t_cmd	*current;
 	int		p_r;
@@ -80,7 +80,7 @@ void	execute_pipeline(t_cmd *cmds, char **envp)
 			exit(1);
 		}
 		if (pid == 0)
-			child_processe(current, p_r, pipe_fd, envp);
+			child_processe(current, p_r, pipe_fd, my_env);
 		else
 			parrent_processe(current, &p_r, pipe_fd);
 		current = current->next;

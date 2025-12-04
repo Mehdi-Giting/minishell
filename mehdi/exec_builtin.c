@@ -6,15 +6,14 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 16:11:20 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/04 02:28:03 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/04 05:30:56 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	exec_builtin(t_cmd *cmd, char **envp)
+int	exec_builtin(t_cmd *cmd, char ***envp)
 {
-	// (void)envp;
 	if (ft_strcmp(cmd->tokens[0], "cd") == 0)
 		return (ft_cd(cmd->tokens));
 	if (ft_strcmp(cmd->tokens[0], "echo") == 0)
@@ -26,7 +25,7 @@ int	exec_builtin(t_cmd *cmd, char **envp)
 	// if (ft_strcmp(cmd->tokens[0], "unset") == 0)
 	// 	return (ft_unset());
 	if (ft_strcmp(cmd->tokens[0], "env") == 0)
-		return (ft_env(cmd->tokens, envp));
+		return (ft_env(cmd->tokens, *envp));
 	// if (ft_strcmp(cmd->tokens[0], "exit") == 0)
 	// 	return (ft_exit());
 	return (1);
