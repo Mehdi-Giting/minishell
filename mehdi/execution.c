@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 06:37:05 by marvin            #+#    #+#             */
-/*   Updated: 2025/11/30 16:50:09 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/02 22:28:28 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int	execute_command(t_cmd *cmd, char **envp)
 	if (cmd->is_builtin)
 	{
 		//implement built in
+		status = exec_builtin(cmd, envp);
 	}
 	else if (cmd->next)
 	{

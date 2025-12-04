@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 16:51:07 by kfredj            #+#    #+#             */
-/*   Updated: 2025/11/30 16:47:09 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/02 16:54:17 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,43 @@ char	**split_command(char *line)
 	char	**tokens;
 	char	c;
 
-	tokens = malloc(BUFSIZ * sizeof * tokens);
 	c = '|';
+	tokens = ft_split(line, c);
 	if (!tokens)
 	{
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
-	tokens = ft_split(line, c);
 	return (tokens);
 }
 
 void	free_tokens(char **tokens)
 {
+	int	i;
+
 	if (!tokens)
 		return ;
+	i = 0;
+	while (tokens[i])
+	{
+		free(tokens[i]);
+		i++;
+	}
 	free(tokens);
 }
-t_cmd	*struct_filer(char **tokens)
+
+char	**split_command2(char *line)
+{
+	char	**tokens;
+
+	tokens = ft_split(line, ' ');
+	return (tokens);
+}
+
+static t_cmd	*create_single_cmd(char *segment)
 {
 	t_cmd	*cmd;
+	char	**words;
 	int		i;
 
 	cmd = malloc(sizeof(t_cmd));
@@ -45,16 +62,36 @@ t_cmd	*struct_filer(char **tokens)
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
-	/*is_built_in*/
 	cmd->is_builtin = 0;
 	cmd->redirections = NULL;
 	cmd->next = NULL;
+	words = split_command2(segment);
 	i = 0;
-	while (tokens[i])
+	while (words[i])
 	{
-		tokens[i] = token_cleaner(tokens[i], cmd);
+		words[i] = token_cleaner(words[i], cmd);
 		i++;
 	}
-	cmd->tokens = tokens;
+	cmd->tokens = words;
 	return (cmd);
+}
+
+t_cmd	*struct_filer(char **segments)
+{
+	t_cmd	*head;
+	t_cmd	*current;
+	int		i;
+
+	if (!segments || !segments[0])
+		return (NULL);
+	head = create_single_cmd(segments[0]);
+	current = head;
+	i = 1;
+	while (segments[i])
+	{
+		current->next = create_single_cmd(segments[i]);
+		current = current->next;
+		i++;
+	}
+	return (head);
 }

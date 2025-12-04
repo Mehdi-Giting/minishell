@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/11/30 16:48:59 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/04 02:47:35 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <sys/stat.h>          // stat, lstat, fstat
 # include <sys/types.h>         // Types pour pid_t, size_t
 # include <termios.h>           // tcsetattr, tcgetattr
+# include <limits.h>            //PATH_MAX for pwd
 
 typedef struct s_redir	t_redir;
 typedef struct s_cmd	t_cmd;
@@ -49,7 +50,7 @@ typedef struct	s_cmd
 	char	**tokens;
 	int		is_builtin;
 	t_redir	*redirections;
-	t_cmd	*next;
+	t_cmd	*next; 
 }	t_cmd;
 
 //---Mehdi
@@ -58,6 +59,13 @@ int		execute_command(t_cmd *cmd, char **envp);
 void	apply_redirections(t_redir *redirections);
 void	child_command(t_cmd *cmd, char **envp);
 void	execute_pipeline(t_cmd *cmds, char **envp);
+
+int		exec_builtin(t_cmd *cmd, char **envp);
+int		ft_pwd();
+int		ft_echo(char **argv);
+int		ft_cd(char **argv);
+int		ft_env(char **argv, char **envp);
+int		ft_export(char **argv, char **envp);
 
 //---Kais
 
