@@ -6,24 +6,11 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 00:15:26 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/04 08:04:11 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/05 11:09:34 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-static char	*ft_replace_env(const char *key, const char *value)
-{
-	char	*key_eq;
-	char	*joined;
-
-	key_eq = ft_strjoin(key, "=");
-	if (!value)
-		return (key_eq);
-	joined = ft_strjoin(key_eq, value);
-	free(key_eq);
-	return (joined);
-}
 
 static char	**extract_key_value(char **argv)
 {

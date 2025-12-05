@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/05 06:46:49 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/05 11:40:05 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,6 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;	
 	my_env = ft_tabdup(envp);
 
-	// ---- Single command ----
-	t_cmd cmd;
-	cmd.tokens = (char *[]){"exit", "1", "2", NULL};
-	cmd.is_builtin = 1;
-	cmd.redirections = NULL;
-	cmd.next = NULL;
-	execute_command(&cmd, &my_env);
-
 	// ft_printf("---- ENV AFTER EXPORT ----\n");
 	// int i = 0;
 	// while (my_env[i])
@@ -35,6 +27,28 @@ int	main(int argc, char **argv, char **envp)
 	// 	ft_printf("%s\n", my_env[i]);
 	// 	i++;
 	// }
+
+	// ---- Single command ----
+	t_cmd cmd;
+	cmd.tokens = (char *[]){"cd", "mehdi", NULL};
+	cmd.is_builtin = 1;
+	cmd.redirections = NULL;
+	cmd.next = NULL;
+	execute_command(&cmd, &my_env);
+	cmd.tokens = (char *[]){"cd", "builtin_list", NULL};
+	cmd.is_builtin = 1;
+	execute_command(&cmd, &my_env);
+	cmd.tokens = (char *[]){"pwd", NULL};
+	cmd.is_builtin = 1;
+	execute_command(&cmd, &my_env);
+	// ft_printf("---- ENV AFTER EXPORT ----\n");
+	// i = 0;
+	// while (my_env[i])
+	// {
+	// 	ft_printf("%s\n", my_env[i]);
+	// 	i++;
+	// }
+
 	ft_free_tab(my_env);
 	// ---- Pipeline: ls | wc -l ----
 	// t_cmd cmd1;

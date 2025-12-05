@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/05 06:39:22 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/05 11:42:48 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,16 @@ void	execute_pipeline(t_cmd *cmds, char **my_env);
 int		exec_builtin(t_cmd *cmd, char ***my_env);
 int		ft_pwd();
 int		ft_echo(char **argv);
-int		ft_cd(char **argv);
+int		ft_cd(char **argv, char ***my_env);
 int		ft_env(char **argv, char **my_env);
 int		ft_export(char **argv, char ***my_env);
-char	**ft_tabdup(char **my_env);
-char	**ft_tabdup_add(char **my_env, const char *new_key);
 int		ft_unset(char **argv, char ***envp);
 int		ft_exit(char **argv);
+char	*ft_getenv(const char *key, char **my_env);
+char	*ft_replace_env(const char *key, const char *value);
+char	**ft_tabdup(char **my_env);
+char	**ft_tabdup_add(char **my_env, const char *new_key);
+void	ft_setenv(char *key, char *value, char ***my_env);
 
 //---Kais
 char	**split_command(char *line);
