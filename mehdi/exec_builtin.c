@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 16:11:20 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/04 13:23:52 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/05 06:52:40 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int	exec_builtin(t_cmd *cmd, char ***envp)
 	if (ft_strcmp(cmd->tokens[0], "unset") == 0)
 		return (ft_unset(cmd->tokens, envp));
 	if (ft_strcmp(cmd->tokens[0], "env") == 0)
-		return (ft_env(cmd->tokens, *envp));
+		return (ft_env(cmd->tokens, * envp));
 	if (ft_strcmp(cmd->tokens[0], "exit") == 0)
-		return (ft_exit());
+		return (ft_exit(cmd->tokens));
 	return (1);
 }

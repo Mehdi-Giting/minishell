@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/04 13:23:02 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/05 06:46:49 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,19 @@ int	main(int argc, char **argv, char **envp)
 
 	// ---- Single command ----
 	t_cmd cmd;
-	cmd.tokens = (char *[]){"unset", "SHELL", NULL};
+	cmd.tokens = (char *[]){"exit", "1", "2", NULL};
 	cmd.is_builtin = 1;
 	cmd.redirections = NULL;
 	cmd.next = NULL;
 	execute_command(&cmd, &my_env);
 
-	ft_printf("---- ENV AFTER EXPORT ----\n");
-	int i = 0;
-	while (my_env[i])
-	{
-		ft_printf("%s\n", my_env[i]);
-		i++;
-	}
+	// ft_printf("---- ENV AFTER EXPORT ----\n");
+	// int i = 0;
+	// while (my_env[i])
+	// {
+	// 	ft_printf("%s\n", my_env[i]);
+	// 	i++;
+	// }
 	ft_free_tab(my_env);
 	// ---- Pipeline: ls | wc -l ----
 	// t_cmd cmd1;
