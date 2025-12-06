@@ -8,11 +8,12 @@ LDFLAGS = -lreadline -lncurses
 
 RM = rm -f
 
-SRCS = trufle.c \
+SRCS = main.c \
 	   mehdi/find_in_path.c \
 	   mehdi/execution.c \
 	   mehdi/redirections_exec.c \
 	   mehdi/execute_pipes.c \
+	   mehdi/signals.c \
 	   mehdi/exec_builtin.c \
 	   mehdi/builtin_list/ft_cd.c \
 	   mehdi/builtin_list/ft_echo.c \

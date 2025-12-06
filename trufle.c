@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/05 11:40:05 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/06 00:43:49 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,6 @@ int	main(int argc, char **argv, char **envp)
 	cmd.is_builtin = 1;
 	cmd.redirections = NULL;
 	cmd.next = NULL;
-	execute_command(&cmd, &my_env);
-	cmd.tokens = (char *[]){"cd", "builtin_list", NULL};
-	cmd.is_builtin = 1;
-	execute_command(&cmd, &my_env);
-	cmd.tokens = (char *[]){"pwd", NULL};
-	cmd.is_builtin = 1;
 	execute_command(&cmd, &my_env);
 	// ft_printf("---- ENV AFTER EXPORT ----\n");
 	// i = 0;

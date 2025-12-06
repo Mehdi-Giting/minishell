@@ -131,12 +131,14 @@ static void	free_all(t_cmd *cmd_list, char **segments, char *line)
 
 int	main(int argc, char **argv, char **envp)
 {
+	char	**my_env;
 	(void)argc;
 	(void)argv;
 	char	*line;
 	char	**segments;
 	t_cmd	*cmd_list;
 
+	my_env = ft_tabdup(envp);
 	// printf("╔═══════════════════════════════════════════════════════╗\n");
 	// printf("║          🧪 MINISHELL - TEST MODE 🧪                   ║\n");
 	// printf("╚═══════════════════════════════════════════════════════╝\n");
@@ -163,7 +165,7 @@ int	main(int argc, char **argv, char **envp)
 		cmd_list = struct_filer(segments);
 		// printf("\n🔎 ÉTAPE 3: Résultat final");
 		// print_all_commands(cmd_list);
-		execute_command(cmd_list, envp);
+		execute_command(cmd_list, &my_env);
 		// print_separator();
 		free_all(cmd_list, segments, line);
 	}

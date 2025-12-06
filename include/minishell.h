@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/05 11:42:48 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/06 05:31:29 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,10 @@ char	*ft_replace_env(const char *key, const char *value);
 char	**ft_tabdup(char **my_env);
 char	**ft_tabdup_add(char **my_env, const char *new_key);
 void	ft_setenv(char *key, char *value, char ***my_env);
+
+void	setup_signals_main(void);
+void	setup_signals_child(void);
+void	setup_signals_wait(void);
 
 //---Kais
 char	**split_command(char *line);

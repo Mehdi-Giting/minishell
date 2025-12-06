@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 06:37:05 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/04 06:22:29 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/06 06:11:33 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int	execute_command(t_cmd *cmd, char ***my_env)
 		status = 0;
 	}
 	else
+	{
 		status = run_command(cmd, *my_env);
+	}
 	return (status);
 }
