@@ -152,7 +152,8 @@ int	main(int argc, char **argv, char **envp)
 	// print_separator();
 	while (1)
 	{
-		line = read_command("\nminishell> ");
+		setup_parent_signal();
+		line = read_command("minishell> ");
 		if (!line || line[0] == '\0')
 		{
 			free(line);

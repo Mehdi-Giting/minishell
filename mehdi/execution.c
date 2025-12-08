@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 06:37:05 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/06 06:11:33 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/08 09:41:36 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	run_command(t_cmd *cmd, char **my_env)
 	pid_t	child;
 	int		status;
 
+	signal(SIGINT, SIG_IGN);
 	child = fork();
 	if (child == -1)
 	{
@@ -38,6 +39,7 @@ int	run_command(t_cmd *cmd, char **my_env)
 	}
 	if (child == 0)
 	{
+		setup_child_signal();
 		apply_redirections(cmd->redirections);
 		child_command(cmd, my_env);
 	}
