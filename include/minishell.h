@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/08 11:07:09 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/12/08 23:56:54 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,9 @@
 # include <termios.h>           // tcsetattr, tcgetattr
 # include <limits.h>            //PATH_MAX for pwd
 
+extern int	g_last_exit_code; 
 typedef struct s_redir	t_redir;
 typedef struct s_cmd	t_cmd;
-
-extern volatile sig_atomic_t	g_signal_received;
 
 typedef enum e_redir_type {
     R_IN,      // <
@@ -76,10 +75,10 @@ char	**ft_tabdup(char **my_env);
 char	**ft_tabdup_add(char **my_env, const char *new_key);
 void	ft_setenv(char *key, char *value, char ***my_env);
 
-void	setup_parent_signal(void);
-void	setup_child_signal(void);
-void	setup_parent_ignore_signals(void);
-int		get_exit_code_from_status(int status);
+void	setup_signals(void);
+void    ignore_signals(void);
+void    default_signals(void);
+int		get_signal_exit_code(int status);
 
 //---Kais
 char	**split_command(char *line);

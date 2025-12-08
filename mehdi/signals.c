@@ -3,69 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 00:37:09 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/08 11:33:58 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/12/09 00:00:11 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-volatile sig_atomic_t g_signal_received = 0;
+int g_last_exit_code = 0;
 
-static void	sigint_handler_prompt(int sig)
+void	handle_sigint(int sig)
 {
 	(void)sig;
-	write(STDOUT_FILENO, "\n", 1);
+	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
-void	setup_parent_signal(void)
+void	setup_signals(void)
 {
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
-
-	sa_int.sa_handler = sigint_handler_prompt;
-	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = SA_RESTART;
-	sigaction(SIGINT, &sa_int, NULL);
-	sa_quit.sa_handler = SIG_IGN;
-	sigemptyset(&sa_quit.sa_mask);
-	sa_quit.sa_flags = 0;
-	sigaction(SIGQUIT, &sa_quit, NULL);
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
 }
 
-void	setup_child_signal(void)
+void	ignore_signals(void)
 {
-	struct sigaction	sa;
-
-	sa.sa_handler = SIG_DFL;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGQUIT, &sa, NULL);
+    signal(SIGINT, SIG_IGN);   // Ignore Ctrl+C
+    signal(SIGQUIT, SIG_IGN);  // Ignore ctrl+'\'
 }
 
-void	setup_parent_ignore_signals(void)
+void	default_signals(void)
 {
-    signal(SIGINT, SIG_IGN);
-    signal(SIGQUIT, SIG_IGN);
+    signal(SIGINT, SIG_DFL);   // Comportement par défaut
+    signal(SIGQUIT, SIG_DFL);  // Comportement par défaut
 }
 
-int	get_exit_code_from_status(int status)
+int	get_signal_exit_code(int status)
 {
-	int	sig;
-
 	if (WIFSIGNALED(status))
-	{
-		sig = WTERMSIG(status);
-		return (128 + sig);
-	}
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	
-	return (1);
+		return (128 + WTERMSIG(status));
+	return (WEXITSTATUS(status));
 }

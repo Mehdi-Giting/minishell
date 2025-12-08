@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 06:37:05 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/08 11:22:36 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/12/09 00:01:17 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	child_command(t_cmd *cmd, char **my_env)
 {
 	char	*path;
 
-	setup_child_signal();
 	path = find_in_path(cmd->tokens[0]);
 	if (!path)
 		exit (127);
@@ -30,28 +29,31 @@ int	run_command(t_cmd *cmd, char **my_env)
 {
 	pid_t	child;
 	int		status;
-	int		exit_code;
 
-	setup_parent_ignore_signals();
+	ignore_signals();
 	child = fork();
 	if (child == -1)
 	{
-		setup_parent_signal();
 		perror("fork");
+		setup_signals();
 		return (1);
 	}
 	if (child == 0)
 	{
-		setup_child_signal();
+		default_signals();
 		apply_redirections(cmd->redirections);
 		child_command(cmd, my_env);
 	}
 	waitpid(child, &status, 0);
-	exit_code = get_exit_code_from_status(status);
 	if (WIFSIGNALED(status))
-        write(STDOUT_FILENO, "\n", 1);
-	setup_parent_signal();
-	return (exit_code);
+	{
+        if (WTERMSIG(status) == SIGQUIT)
+            write(2, "Quit (core dumped)\n", 19);
+        else
+            write(1, "\n", 1);
+	}
+	setup_signals();
+	return (get_signal_exit_code(status));
 }
 
 int	execute_command(t_cmd *cmd, char ***my_env)
@@ -59,17 +61,11 @@ int	execute_command(t_cmd *cmd, char ***my_env)
 	int	status;
 
 	if (cmd->is_builtin)
-	{
 		status = exec_builtin(cmd, my_env);
-	}
 	else if (cmd->next)
-	{
-		execute_pipeline(cmd, *my_env);
-		status = 0;
-	}
+		status = execute_pipeline(cmd, *my_env);
 	else
-	{
 		status = run_command(cmd, *my_env);
-	}
+	g_last_exit_code = status;
 	return (status);
 }

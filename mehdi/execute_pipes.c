@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 04:38:52 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/08 11:36:58 by mehdi            ###   ########.fr       */
+/*   Updated: 2025/12/08 23:46:33 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ static void	fd_manager(t_cmd *current, int	*pipe_fd)
 
 static void	child_processe(t_cmd *current, int p_r, int *pipe_fd, char **my_env)
 {
+	default_signals();
 	if (p_r != -1)
 		dup2(p_r, STDIN_FILENO);
 	if (current->next)
@@ -68,14 +69,13 @@ int	execute_pipeline(t_cmd *cmds, char **my_env)
 	int		pipe_fd[2];
 	pid_t	pid;
 	int		status;
-	int		last_exit_code;
-	int		signaled;
-	int		sigquit_received;
+	int		last_status;
+	int		killed_by_signal;
 
 	current = cmds;
 	p_r = -1;
-	signaled = 0;
-	setup_parent_ignore_signals();
+	killed_by_signal = 0;
+	ignore_signals();
 	while (current)
 	{
 		fd_manager(current, pipe_fd);
@@ -86,27 +86,24 @@ int	execute_pipeline(t_cmd *cmds, char **my_env)
 			exit(1);
 		}
 		if (pid == 0)
-		{
-		    setup_child_signal();
 			child_processe(current, p_r, pipe_fd, my_env);
-		}
 		else
 			parrent_processe(current, &p_r, pipe_fd);
 		current = current->next;
 	}
     while (wait(&status) > 0)
 	{
-        last_exit_code = get_exit_code_from_status(status);
-        if (WIFSIGNALED(status))
-		{
-            signaled = 1;
-			if (WTERMSIG(status) == SIGQUIT)
-            	sigquit_received = 1;
-		}
+		last_status = status;
+		if (WIFSIGNALED(status))
+            killed_by_signal = WTERMSIG(status);
 	}
-	if (sigquit_received)
-        write(STDERR_FILENO, "Quit (core dumped)", 18);
-	if (signaled)
-        write(STDOUT_FILENO, "\n", 1);
-	return (last_exit_code);
+	if (killed_by_signal)
+    {
+        if (killed_by_signal == SIGQUIT)
+            write(2, "Quit (core dumped)\n", 19);
+        else
+            write(1, "\n", 1);
+    }
+	setup_signals();
+	return (get_signal_exit_code(last_status));
 }
