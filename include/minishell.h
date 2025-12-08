@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/08 09:10:19 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/08 11:07:09 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 
 typedef struct s_redir	t_redir;
 typedef struct s_cmd	t_cmd;
+
+extern volatile sig_atomic_t	g_signal_received;
 
 typedef enum e_redir_type {
     R_IN,      // <
@@ -58,7 +60,7 @@ char	*find_in_path(const char *cmd);
 int		execute_command(t_cmd *cmd, char ***my_env);
 void	apply_redirections(t_redir *redirections);
 void	child_command(t_cmd *cmd, char **my_env);
-void	execute_pipeline(t_cmd *cmds, char **my_env);
+int		execute_pipeline(t_cmd *cmds, char **my_env);
 
 int		exec_builtin(t_cmd *cmd, char ***my_env);
 int		ft_pwd();
@@ -76,6 +78,8 @@ void	ft_setenv(char *key, char *value, char ***my_env);
 
 void	setup_parent_signal(void);
 void	setup_child_signal(void);
+void	setup_parent_ignore_signals(void);
+int		get_exit_code_from_status(int status);
 
 //---Kais
 char	**split_command(char *line);

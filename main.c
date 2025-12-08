@@ -150,9 +150,10 @@ int	main(int argc, char **argv, char **envp)
 	// printf("   • grep test file.txt | wc -l\n");
 	// printf("\n📌 Ctrl+D pour quitter\n");
 	// print_separator();
+	setup_parent_signal();
 	while (1)
 	{
-		setup_parent_signal();
+		g_signal_received = 0;
 		line = read_command("minishell> ");
 		if (!line || line[0] == '\0')
 		{

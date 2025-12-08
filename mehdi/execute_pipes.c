@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mehdi <mehdi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 04:38:52 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/08 09:41:03 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/08 11:36:58 by mehdi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,15 +61,21 @@ static void	parrent_processe(t_cmd *current, int *p_r, int *pipe_fd)
 		*p_r = -1;
 }
 
-void	execute_pipeline(t_cmd *cmds, char **my_env)
+int	execute_pipeline(t_cmd *cmds, char **my_env)
 {
 	t_cmd	*current;
 	int		p_r;
 	int		pipe_fd[2];
 	pid_t	pid;
+	int		status;
+	int		last_exit_code;
+	int		signaled;
+	int		sigquit_received;
 
 	current = cmds;
 	p_r = -1;
+	signaled = 0;
+	setup_parent_ignore_signals();
 	while (current)
 	{
 		fd_manager(current, pipe_fd);
@@ -80,11 +86,27 @@ void	execute_pipeline(t_cmd *cmds, char **my_env)
 			exit(1);
 		}
 		if (pid == 0)
+		{
+		    setup_child_signal();
 			child_processe(current, p_r, pipe_fd, my_env);
+		}
 		else
 			parrent_processe(current, &p_r, pipe_fd);
 		current = current->next;
 	}
-	while (wait(NULL) > 0)
-		;
+    while (wait(&status) > 0)
+	{
+        last_exit_code = get_exit_code_from_status(status);
+        if (WIFSIGNALED(status))
+		{
+            signaled = 1;
+			if (WTERMSIG(status) == SIGQUIT)
+            	sigquit_received = 1;
+		}
+	}
+	if (sigquit_received)
+        write(STDERR_FILENO, "Quit (core dumped)", 18);
+	if (signaled)
+        write(STDOUT_FILENO, "\n", 1);
+	return (last_exit_code);
 }
