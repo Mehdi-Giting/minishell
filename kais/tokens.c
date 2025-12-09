@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 16:51:07 by kfredj            #+#    #+#             */
-/*   Updated: 2025/12/02 16:54:17 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/09 02:20:15 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ static t_cmd	*create_single_cmd(char *segment)
 	t_cmd	*cmd;
 	char	**words;
 	int		i;
+	char	*tmp;
 
 	cmd = malloc(sizeof(t_cmd));
 	if (!cmd)
@@ -70,6 +71,9 @@ static t_cmd	*create_single_cmd(char *segment)
 	while (words[i])
 	{
 		words[i] = token_cleaner(words[i], cmd);
+		tmp = expand_exit_code(words[i]);
+        free(words[i]);
+        words[i] = tmp;
 		i++;
 	}
 	cmd->tokens = words;
@@ -85,11 +89,13 @@ t_cmd	*struct_filer(char **segments)
 	if (!segments || !segments[0])
 		return (NULL);
 	head = create_single_cmd(segments[0]);
+	is_built_in(head);
 	current = head;
 	i = 1;
 	while (segments[i])
 	{
 		current->next = create_single_cmd(segments[i]);
+		is_built_in(current->next);
 		current = current->next;
 		i++;
 	}

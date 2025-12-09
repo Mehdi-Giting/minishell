@@ -80,5 +80,6 @@ int	main(int argc, char **argv, char **envp)
 		// printf("DEBUG: Last exit code = %d\n", exit_code);  // ← TEMPORAIRE pour debug
 		free_all(cmd_list, segments, line);
 	}
-	return (0);
+	ft_free_tab(my_env);
+	return (g_last_exit_code);
 }

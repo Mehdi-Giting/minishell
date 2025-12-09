@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/08 23:56:54 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/09 02:18:51 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,7 @@ char	*token_cleaner(char *token, t_cmd *cmd);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 int		ft_strcmp(const char *s1, const char *s2);
 void	is_built_in(t_cmd *cmd);
+
+char	*expand_exit_code(char *token);
 
 #endif
