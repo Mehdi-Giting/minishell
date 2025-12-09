@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 16:51:07 by kfredj            #+#    #+#             */
-/*   Updated: 2025/12/09 02:20:15 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/09 11:02:29 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,11 @@ static t_cmd	*create_single_cmd(char *segment)
 	{
 		words[i] = token_cleaner(words[i], cmd);
 		tmp = expand_exit_code(words[i]);
+		if (ft_strcmp(tmp, "$?") != 0)
+		{
+			tmp = ft_strtrim(tmp, "\"\'");
+			ft_printf("%s\n", tmp);
+		}
         free(words[i]);
         words[i] = tmp;
 		i++;
