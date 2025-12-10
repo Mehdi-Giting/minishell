@@ -29,7 +29,8 @@ SRCS = main.c \
 	   kais/redirection.c \
 	   kais/split.c \
 	   kais/tokens.c \
-	   kais/utils.c
+	   kais/utils.c \
+	   kais/quotes.c
 
 OBJS = $(SRCS:.c=.o)
 
