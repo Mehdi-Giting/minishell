@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/10 12:10:55 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/11 02:54:24 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,10 @@ char	*ft_replace_env(const char *key, const char *value);
 char	**ft_tabdup(char **my_env);
 char	**ft_tabdup_add(char **my_env, const char *new_key);
 void	ft_setenv(char *key, char *value, char ***my_env);
+void	sort_env(char **env);
+void	print_sorted_env(char **env);
+int		export_one_arg(char *arg, char ***my_env);
+int		is_valid_identifier(char *str);
 
 void	setup_signals(void);
 void    ignore_signals(void);
@@ -99,6 +103,7 @@ int		count_tokens_quotes(char *line);
 int		skip_word(char *line, int i);
 char	*clean_quotes(char *token);
 char	**split_with_quotes(char *line);
+char	*expand_variables(char *str);
 
 char	*expand_exit_code(char *token);
 

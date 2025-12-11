@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:00:00 by kfredj            #+#    #+#             */
-/*   Updated: 2025/12/10 12:07:21 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/10 19:21:25 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,23 +37,47 @@ int	skip_word(char *line, int i)
 	return (i);
 }
 
-static void	copy_without_quotes(char *token, char *result)
+static char	*process_double_quotes(char *token, int *i, int *j, char *result)
 {
-	char	quote;
+	int		start;
+	char	*expanded;
+	int		k;
+
+	(*i)++;
+	start = *i;
+	while (token[*i] && token[*i] != '"')
+		(*i)++;
+	expanded = ft_substr(token, start, *i - start);
+	expanded = expand_variables(expanded);
+	k = 0;
+	while (expanded[k])
+		result[(*j)++] = expanded[k++];
+	free(expanded);
+	if (token[*i] == '"')
+		(*i)++;
+	return (result);
+}
+
+static void	copy_with_expansion(char *token, char *result)
+{
 	int		i;
 	int		j;
+	// int		start;
 
 	i = 0;
 	j = 0;
-	quote = 0;
 	while (token[i])
 	{
-		if (quote == 0 && (token[i] == '\'' || token[i] == '"'))
-			quote = token[i++];
-		else if (quote != 0 && token[i] == quote)
+		if (token[i] == '"')
+			process_double_quotes(token, &i, &j, result);
+		else if (token[i] == '\'')
 		{
-			quote = 0;
 			i++;
+			// start = i;
+			while (token[i] && token[i] != '\'')
+				result[j++] = token[i++];
+			if (token[i] == '\'')
+				i++;
 		}
 		else
 			result[j++] = token[i++];
@@ -68,11 +92,11 @@ char	*clean_quotes(char *token)
 
 	if (!token)
 		return (NULL);
-	result = malloc(ft_strlen(token) + 1);
+	result = malloc(ft_strlen(token) * 4 + 1);
 	if (!result)
 		return (NULL);
 	old = token;
-	copy_without_quotes(token, result);
+	copy_with_expansion(token, result);
 	free(old);
 	return (result);
 }

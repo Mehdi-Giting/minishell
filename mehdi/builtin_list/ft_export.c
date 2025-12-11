@@ -6,54 +6,53 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 00:15:26 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/05 11:09:34 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/11 03:07:13 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static char	**extract_key_value(char **argv)
-{
-	char	**key;
-
-	if (argv[1])
-	{
-		if (ft_strchr(argv[1], '='))
-		{
-			key = ft_split(argv[1], '=');
-			return (key);
-		}
-	}
-	key = NULL;
-	return (key);
-}
-
-static int	find_key_index(char **env, char *key)
+int	is_valid_identifier(char *str)
 {
 	int	i;
 
-	i = 0;
-	while (env[i])
+	if (!str)
+		return (0);
+	if (!(ft_isalpha(str[0]) || str[0] == '_'))
+		return (0);
+	i = 1;
+	while (str[i] && str[i] != '=')
 	{
-		if (ft_strncmp(env[i], key, ft_strlen(key)) == 0)
-			if (env[i][ft_strlen(key)] == '=')
-				return (i);
+		if (!(ft_isalnum(str[i]) || str[i] == '_'))
+			return (0);
 		i++;
 	}
-	return (-1);
+	return (1);
 }
 
 int	ft_export(char **argv, char ***my_env)
 {
-	char	**key;
-	int		index;
+	int		i;
+	int		exit_code;
+	int		has_error;
+	char	**my_env_cp;
 
-	key = extract_key_value(argv);
-	index = find_key_index(*my_env, key[0]);
-	if (index >= 0)
-		(*my_env)[index] = ft_replace_env(key[0], key[1]);
-	else
-		*my_env = ft_tabdup_add(*my_env, argv[1]);
-	ft_free_tab(key);
-	return (0);
+	if (!argv[1])
+	{
+		my_env_cp = ft_tabdup(*my_env);
+		print_sorted_env(my_env_cp);
+		ft_free_tab(my_env_cp);
+		return (0);
+	}
+
+	i = 1;
+	has_error = 0;
+	while (argv[i])
+	{
+		exit_code = export_one_arg(argv[i], my_env);
+		if (exit_code != 0)
+			has_error = 1;
+		i++;
+	}
+	return (has_error);
 }

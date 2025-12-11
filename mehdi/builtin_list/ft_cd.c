@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 02:43:55 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/05 11:16:21 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/11 01:17:10 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,11 @@ int	ft_cd(char **argv, char ***my_env)
 	char 	*path;
 	char	*old_pwd;
 
+	if (argv[2])
+	{
+		ft_putstr_fd(" too many arguments\n", 2);
+		return (1);
+	}
 	path = get_target_path(argv, *my_env);
 	if (!path)
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 16:55:44 by kfredj            #+#    #+#             */
-/*   Updated: 2025/11/30 16:47:05 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/11 02:55:31 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	dst[i] = '\0';
 	return (dst);
 }
+
 static void	ft_fill(char **result, const char *s, char c)
 {
 	int	i;

@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 16:11:20 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/05 10:53:46 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/11 03:11:23 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	exec_builtin(t_cmd *cmd, char ***envp)
 		return (ft_echo(cmd->tokens));
 	if (ft_strcmp(cmd->tokens[0], "pwd") == 0)
 		return (ft_pwd());
-	if (ft_strcmp(cmd->tokens[0], "export") == 0)
+	if (ft_strcmp(cmd->tokens[0], "export") == 0 && cmd->next == NULL)
 		return (ft_export(cmd->tokens, envp));
 	if (ft_strcmp(cmd->tokens[0], "unset") == 0)
 		return (ft_unset(cmd->tokens, envp));

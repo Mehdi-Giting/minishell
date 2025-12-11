@@ -8,6 +8,9 @@ LDFLAGS = -lreadline -lncurses
 
 RM = rm -f
 
+# Dossier pour les fichiers objets
+OBJ_DIR = obj
+
 SRCS = main.c \
 	   mehdi/find_in_path.c \
 	   mehdi/execution.c \
@@ -20,6 +23,7 @@ SRCS = main.c \
 	   mehdi/builtin_list/ft_env.c \
 	   mehdi/builtin_list/ft_exit.c \
 	   mehdi/builtin_list/ft_export.c \
+	   mehdi/builtin_list/ft_export2.c \
 	   mehdi/builtin_list/ft_pwd.c \
 	   mehdi/builtin_list/ft_unset.c \
 	   mehdi/builtin_list/utils.c \
@@ -30,9 +34,11 @@ SRCS = main.c \
 	   kais/split.c \
 	   kais/tokens.c \
 	   kais/utils.c \
-	   kais/quotes.c
+	   kais/quotes.c \
+	   kais/expansion.c
 
-OBJS = $(SRCS:.c=.o)
+# Les .o gardent la même structure de dossiers dans obj/
+OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
@@ -43,6 +49,12 @@ $(LIBFT):
 	@echo "🔧 Building libft..."
 	@$(MAKE) -C $(LIBFT_DIR)
 
+# Créer les sous-dossiers nécessaires dans obj/
+$(OBJ_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	@echo "🔨 Compiling $<..."
+	@$(CC) $(CFLAGS) -c $< -o $@
+
 $(NAME): $(OBJS) $(LIBFT)
 	@echo "🧩 Linking $(NAME)..."
 	@$(CC) $(OBJS) -L$(LIBFT_DIR) -lft $(LDFLAGS) -o $(NAME)
@@ -50,7 +62,7 @@ $(NAME): $(OBJS) $(LIBFT)
 
 clean:
 	@echo "🧹 Cleaning object files..."
-	@$(RM) $(OBJS)
+	@$(RM) -r $(OBJ_DIR)
 	@$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean

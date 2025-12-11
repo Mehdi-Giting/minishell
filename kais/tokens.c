@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 16:51:07 by kfredj            #+#    #+#             */
-/*   Updated: 2025/12/10 13:19:43 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/10 14:29:55 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static t_cmd	*create_single_cmd(char *segment)
 	while (words[i])
 	{
 		words[i] = token_cleaner(words[i], cmd);
-		tmp = expand_exit_code(w$ords[i]);
+		tmp = expand_exit_code(words[i]);
         free(words[i]);
         words[i] = tmp;
 		i++;
