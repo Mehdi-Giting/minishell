@@ -1,35 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_command.c                                     :+:      :+:    :+:   */
+/*   lexer_op.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 13:39:18 by kfredj            #+#    #+#             */
-/*   Updated: 2025/12/14 09:51:45 by marvin           ###   ########.fr       */
+/*   Created: 2025/12/16 08:45:59 by marvin            #+#    #+#             */
+/*   Updated: 2025/12/16 17:06:55 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char	*read_command(char *prompt)
+t_token	*parse_operator(char *input, int *i)
 {
-	char	*line;
-
-	line = readline(prompt);
-	if (!line)
+	if (input[*i] == '|')
+		return ((*i)++, token_new(TOK_PIPE, NULL));
+	if (input[*i] == '<')
 	{
-		ft_printf("exit\n");
-		exit(g_last_exit_code);
+		if (input[*i + 1] == '<')
+			return ((*i += 2), token_new(TOK_HEREDOC, NULL));
+		return ((*i)++, token_new(TOK_REDIR_IN, NULL));
 	}
-	if (line[0] != '\0')
-		add_history(line);
-	return (line);
-}
-
-char	*expand_exit_code(char *token)
-{
-    if (ft_strcmp(token, "$?") == 0)
-        return (ft_itoa(g_last_exit_code));
-    return (ft_strdup(token));
+	if (input[*i + 1] == '>')
+		return ((*i += 2), token_new(TOK_APPEND, NULL));
+	return ((*i)++, token_new(TOK_REDIR_OUT, NULL));
 }

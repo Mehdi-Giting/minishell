@@ -1,35 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_command.c                                     :+:      :+:    :+:   */
+/*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 13:39:18 by kfredj            #+#    #+#             */
-/*   Updated: 2025/12/14 09:51:45 by marvin           ###   ########.fr       */
+/*   Created: 2025/12/16 08:44:54 by marvin            #+#    #+#             */
+/*   Updated: 2025/12/16 20:26:07 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char	*read_command(char *prompt)
+t_token	*token_new(t_token_type type, char *value)
 {
-	char	*line;
+	t_token	*new;
 
-	line = readline(prompt);
-	if (!line)
-	{
-		ft_printf("exit\n");
-		exit(g_last_exit_code);
-	}
-	if (line[0] != '\0')
-		add_history(line);
-	return (line);
-}
-
-char	*expand_exit_code(char *token)
-{
-    if (ft_strcmp(token, "$?") == 0)
-        return (ft_itoa(g_last_exit_code));
-    return (ft_strdup(token));
+	new = malloc(sizeof(t_token));
+	if (!new)
+		return (NULL);
+	new->type = type;
+	new->value = value ? ft_strdup(value) : NULL;
+	new->next = NULL;
+	return (new);
 }

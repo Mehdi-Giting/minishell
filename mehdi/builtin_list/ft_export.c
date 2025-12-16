@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 00:15:26 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/11 03:07:13 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/13 08:55:32 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ int	ft_export(char **argv, char ***my_env)
 		ft_free_tab(my_env_cp);
 		return (0);
 	}
-
 	i = 1;
 	has_error = 0;
 	while (argv[i])

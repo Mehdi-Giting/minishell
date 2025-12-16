@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/11 02:54:24 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/16 19:55:57 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # include <termios.h>           // tcsetattr, tcgetattr
 # include <limits.h>            //PATH_MAX for pwd
 
-extern int	g_last_exit_code; 
+extern int				g_last_exit_code; 
 typedef struct s_redir	t_redir;
 typedef struct s_cmd	t_cmd;
 
@@ -39,20 +39,43 @@ typedef enum e_redir_type {
     R_HEREDOC  // <<
 }   t_redir_type;
 
+typedef struct	s_cmd
+{
+	char			**tokens;
+	int				is_builtin;
+	t_redir			*redirections;
+	t_cmd			*next;
+}	t_cmd;
+
 typedef struct s_redir
 {
 	char			*file;
-	t_redir			*next;
 	t_redir_type	type;
+	t_redir			*next;
 }	t_redir;
 
-typedef struct	s_cmd
+typedef enum e_token_type {
+    TOK_WORD,
+    TOK_PIPE,      // |
+    TOK_REDIR_IN,  // <
+    TOK_REDIR_OUT, // >
+    TOK_APPEND,    // >>
+    TOK_HEREDOC    // <<
+} t_token_type;
+
+typedef struct s_token
 {
-	char	**tokens;
-	int		is_builtin;
-	t_redir	*redirections;
-	t_cmd	*next; 
-}	t_cmd;
+	t_token_type	type;
+	char			*value;
+	struct s_token	*next;
+}	t_token;
+
+typedef struct s_arg
+{
+    char            *value;
+    struct s_arg    *next;
+} t_arg;
+
 
 //---Mehdi
 char	*find_in_path(const char *cmd);
@@ -106,5 +129,36 @@ char	**split_with_quotes(char *line);
 char	*expand_variables(char *str);
 
 char	*expand_exit_code(char *token);
+
+//--parser
+int		is_whitespace(char c);
+int		is_operator_char(char c);
+int		is_quote(char c);
+t_token	*token_new(t_token_type type, char *value);
+void	token_add_back(t_token **head, t_token *new);
+t_token	*lexer(char *input);
+t_token	*parse_operator(char *input, int *i);
+t_token	*parse_word(char *input, int *i);
+int		skip_quote(char *s, int i);
+int		check_syntax(t_token *token);
+int		is_redir(t_token_type type);
+t_cmd	*cmd_new(void);
+void	arg_add_back(t_arg **head, char *value);
+char	**arg_list_to_argv(t_arg *args);
+void	add_redirection(t_cmd *cmd, t_redir_type type, char *file);
+t_cmd	*parse_tokens(t_token *tokens);
+char	*expand_var(char *s, int *i, char **env);
+char 	*expand_string(char *s, char **env);
+void 	expand_cmds(t_cmd *cmds, char **env);
+int		handle_quote(char c, int *in_single, int *in_double, char **res);
+void	handle_dollar(char *s, int *i, char **res, char **env);
+void	append_char(char c, char **res);
+char	*str_append(char *dst, char *src);
+void	free_tokens_p(t_token *tokens);
+void	free_argv(char **argv);
+void	free_redirs(t_redir *redirs);
+void	free_cmds(t_cmd *cmds);
+int		is_builtin_name(char *cmd);
+void	detect_builtins(t_cmd *cmds);
 
 #endif

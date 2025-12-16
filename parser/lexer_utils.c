@@ -1,35 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_command.c                                     :+:      :+:    :+:   */
+/*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 13:39:18 by kfredj            #+#    #+#             */
-/*   Updated: 2025/12/14 09:51:45 by marvin           ###   ########.fr       */
+/*   Created: 2025/12/16 08:43:59 by marvin            #+#    #+#             */
+/*   Updated: 2025/12/16 17:07:01 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char	*read_command(char *prompt)
+int	is_whitespace(char c)
 {
-	char	*line;
-
-	line = readline(prompt);
-	if (!line)
-	{
-		ft_printf("exit\n");
-		exit(g_last_exit_code);
-	}
-	if (line[0] != '\0')
-		add_history(line);
-	return (line);
+	return (c == ' ' || c == '\t');
 }
 
-char	*expand_exit_code(char *token)
+int	is_operator_char(char c)
 {
-    if (ft_strcmp(token, "$?") == 0)
-        return (ft_itoa(g_last_exit_code));
-    return (ft_strdup(token));
+	return (c == '|' || c == '<' || c == '>');
+}
+
+int	is_quote(char c)
+{
+	return (c == '\'' || c == '"');
 }

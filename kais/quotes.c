@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:00:00 by kfredj            #+#    #+#             */
-/*   Updated: 2025/12/10 19:21:25 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/15 15:38:25 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,10 @@ static void	copy_with_expansion(char *token, char *result)
 	while (token[i])
 	{
 		if (token[i] == '"')
+		{
 			process_double_quotes(token, &i, &j, result);
+			break ;
+		}
 		else if (token[i] == '\'')
 		{
 			i++;

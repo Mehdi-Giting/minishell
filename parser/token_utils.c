@@ -1,35 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_command.c                                     :+:      :+:    :+:   */
+/*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 13:39:18 by kfredj            #+#    #+#             */
-/*   Updated: 2025/12/14 09:51:45 by marvin           ###   ########.fr       */
+/*   Created: 2025/12/16 08:45:46 by marvin            #+#    #+#             */
+/*   Updated: 2025/12/16 17:07:20 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char	*read_command(char *prompt)
+void	token_add_back(t_token **head, t_token *new)
 {
-	char	*line;
+	t_token	*tmp;
 
-	line = readline(prompt);
-	if (!line)
+	if (!head || !new)
+		return ;
+	if (!*head)
 	{
-		ft_printf("exit\n");
-		exit(g_last_exit_code);
+		*head = new;
+		return ;
 	}
-	if (line[0] != '\0')
-		add_history(line);
-	return (line);
-}
-
-char	*expand_exit_code(char *token)
-{
-    if (ft_strcmp(token, "$?") == 0)
-        return (ft_itoa(g_last_exit_code));
-    return (ft_strdup(token));
+	tmp = *head;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
 }

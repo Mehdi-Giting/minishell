@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 06:37:05 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/11 03:13:12 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/15 14:27:40 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,5 @@ int	execute_command(t_cmd *cmd, char ***my_env)
         status = execute_pipeline(cmd, *my_env);
     else
 		status = run_command(cmd, *my_env);
-	g_last_exit_code = status;
 	return (status);
 }

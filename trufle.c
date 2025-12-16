@@ -6,64 +6,49 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/06 00:43:49 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/16 20:16:27 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+int	main(int ac, char **av, char **envp)
 {
+	char	*input;
+	t_token	*tokens;
+	t_cmd	*cmds;
 	char	**my_env;
 
-	(void)argc;
-	(void)argv;	
+	(void)ac;
+	(void)av;
 	my_env = ft_tabdup(envp);
-
-	// ft_printf("---- ENV AFTER EXPORT ----\n");
-	// int i = 0;
-	// while (my_env[i])
-	// {
-	// 	ft_printf("%s\n", my_env[i]);
-	// 	i++;
-	// }
-
-	// ---- Single command ----
-	t_cmd cmd;
-	cmd.tokens = (char *[]){"cd", "mehdi", NULL};
-	cmd.is_builtin = 1;
-	cmd.redirections = NULL;
-	cmd.next = NULL;
-	execute_command(&cmd, &my_env);
-	// ft_printf("---- ENV AFTER EXPORT ----\n");
-	// i = 0;
-	// while (my_env[i])
-	// {
-	// 	ft_printf("%s\n", my_env[i]);
-	// 	i++;
-	// }
-
+	while (1)
+	{
+		input = readline("minishell$ ");
+		if (!input)
+			break ;
+		if (*input)
+			add_history(input);
+		tokens = lexer(input);
+		if (!tokens)
+		{
+			free(input);
+			continue ;
+		}
+		if (check_syntax(tokens) != 0)
+		{
+			free_tokens_p(tokens);
+			free(input);
+			continue ;
+		}
+		cmds = parse_tokens(tokens);
+		free_tokens_p(tokens);
+		expand_cmds(cmds, my_env);
+		detect_builtins(cmds);
+		g_last_exit_code = execute_command(cmds, &my_env);
+		free_cmds(cmds);
+		free(input);
+	}
 	ft_free_tab(my_env);
-	// ---- Pipeline: ls | wc -l ----
-	// t_cmd cmd1;
-	// t_cmd cmd2;
-	// t_cmd cmd3;
-
-	// cmd1.tokens = (char *[]){"ls", NULL};
-	// cmd1.is_builtin = 0;
-	// cmd1.redirections = NULL;
-	// cmd1.next = &cmd2;
-
-	// cmd2.tokens = (char *[]){"grep", ".c", NULL};
-	// cmd2.is_builtin = 0;
-	// cmd2.redirections = NULL;
-	// cmd2.next = &cmd3;
-
-	// cmd3.tokens = (char *[]){"wc", "-l", NULL};
-	// cmd3.is_builtin = 0;
-	// cmd3.redirections = NULL;
-	// cmd3.next = NULL;
-	// execute_command(&cmd1, my_env);
-
 	return (0);
 }

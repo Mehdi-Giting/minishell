@@ -3,7 +3,7 @@
 NAME = minishell
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 LDFLAGS = -lreadline -lncurses
 
 RM = rm -f
@@ -11,7 +11,7 @@ RM = rm -f
 # Dossier pour les fichiers objets
 OBJ_DIR = obj
 
-SRCS = main.c \
+SRCS = trufle.c \
 	   mehdi/find_in_path.c \
 	   mehdi/execution.c \
 	   mehdi/redirections_exec.c \
@@ -35,7 +35,22 @@ SRCS = main.c \
 	   kais/tokens.c \
 	   kais/utils.c \
 	   kais/quotes.c \
-	   kais/expansion.c
+	   kais/expansion.c \
+	   parser/lexer_op.c \
+	   parser/lexer_utils.c \
+	   parser/lexer_word.c \
+	   parser/lexer.c \
+	   parser/token.c \
+	   parser/token_utils.c \
+	   parser/syntax_check.c \
+	   parser/parse_tokens.c \
+	   parser/parser_utils.c \
+	   parser/parser_redir.c \
+	   parser/expand_string.c \
+	   parser/expand_cmds.c \
+	   parser/expand_utils.c \
+	   parser/cleaner.c \
+	   parser/builtins.c \
 
 # Les .o gardent la même structure de dossiers dans obj/
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
@@ -46,13 +61,13 @@ LIBFT = $(LIBFT_DIR)/libft.a
 all: $(LIBFT) $(NAME)
 
 $(LIBFT):
-	@echo "🔧 Building libft..."
+# 	@echo "🔧 Building libft..."
 	@$(MAKE) -C $(LIBFT_DIR)
 
 # Créer les sous-dossiers nécessaires dans obj/
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	@echo "🔨 Compiling $<..."
+# 	@echo "🔨 Compiling $<..."
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(LIBFT)

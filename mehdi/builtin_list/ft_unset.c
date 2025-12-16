@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 12:39:15 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/04 13:19:22 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/13 07:43:10 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,17 @@ static char	**ft_tabdelete(char **my_env, int index)
 int	ft_unset(char **argv, char ***my_env)
 {
 	int	match;
+	int	i;
 
-	match = find_match(argv, *my_env);
-	if (match < 0)
+	if (!argv[1])
 		return (0);
-	else
-		*my_env = ft_tabdelete(*my_env, match);
+	i = 1;
+	while (argv[i])
+	{
+		match = find_match(argv, *my_env);
+		if (match >= 0)
+			*my_env = ft_tabdelete(*my_env, match);
+		i++;
+	}
 	return (0);
 }
