@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 02:07:41 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/15 14:30:29 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:03:38 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	ft_echo(char **argv)
 
 	i = 1;
 	new_line = 1;
-	while (check_for_n(argv[i]))
+	while (argv[i] && check_for_n(argv[i]))
 	{
 		new_line = 0;
 		i++;

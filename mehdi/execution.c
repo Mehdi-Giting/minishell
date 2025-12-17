@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 06:37:05 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/15 14:27:40 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/17 17:49:02 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	child_command(t_cmd *cmd, char **my_env)
 {
 	char	*path;
 
+	if (apply_redirections(cmd->redirections))
+		exit(1);
 	path = find_in_path(cmd->tokens[0]);
 	if (!path)
 		exit (127);
@@ -30,6 +32,8 @@ int	run_command(t_cmd *cmd, char **my_env)
 	pid_t	child;
 	int		status;
 
+	// if (validate_redirections(cmd->redirections))
+	// 	return (1);
 	ignore_signals();
 	child = fork();
 	if (child == -1)
@@ -60,11 +64,15 @@ int	execute_command(t_cmd *cmd, char ***my_env)
 {
 	int	status;
 
-	if (cmd->is_builtin)
-		status = exec_builtin(cmd, my_env);
-    else if (cmd->next)
+    if (cmd->next)
         status = execute_pipeline(cmd, *my_env);
+	else if (cmd->is_builtin)
+		status = exec_builtin(cmd, my_env);
     else
+	{
+		// if (validate_redirections(cmd->redirections))
+    	// 	return (status = 1, status);	
 		status = run_command(cmd, *my_env);
+	}
 	return (status);
 }

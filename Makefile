@@ -3,7 +3,7 @@
 NAME = minishell
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 LDFLAGS = -lreadline -lncurses
 
 RM = rm -f

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "include/minishell.h"
+#include "include/minishell.h"
 
 // static void	print_tokens(t_cmd *cmd)
 // {
@@ -68,34 +68,34 @@
 // 	printf("└────────────────────────────────────────────────\n");
 // }
 
-// static void	free_all(t_cmd *cmd_list, char **segments, char *line)
-// {
-// 	t_redir	*tmp_redir;
-// 	t_redir	*redir;
-// 	t_cmd	*tmp_cmd;
+static void	free_all(t_cmd *cmd_list, char **segments, char *line)
+{
+	t_redir	*tmp_redir;
+	t_redir	*redir;
+	t_cmd	*tmp_cmd;
 
-// 	while (cmd_list)
-// 	{
-// 		tmp_cmd = cmd_list->next;
-// 		if (cmd_list->tokens)
-// 			free_tokens(cmd_list->tokens);
-// 		redir = cmd_list->redirections;
-// 		while (redir)
-// 		{
-// 			tmp_redir = redir->next;
-// 			if (redir->file)
-// 				free(redir->file);
-// 			free(redir);
-// 			redir = tmp_redir;
-// 		}
-// 		free(cmd_list);
-// 		cmd_list = tmp_cmd;
-// 	}
-// 	if (segments)
-// 		free_tokens(segments);
-// 	if (line)
-// 		free(line);
-// }
+	while (cmd_list)
+	{
+		tmp_cmd = cmd_list->next;
+		if (cmd_list->tokens)
+			free_tokens(cmd_list->tokens);
+		redir = cmd_list->redirections;
+		while (redir)
+		{
+			tmp_redir = redir->next;
+			if (redir->file)
+				free(redir->file);
+			free(redir);
+			redir = tmp_redir;
+		}
+		free(cmd_list);
+		cmd_list = tmp_cmd;
+	}
+	if (segments)
+		free_tokens(segments);
+	if (line)
+		free(line);
+}
 
 // static void	process_line(char *line)
 // {
@@ -150,30 +150,30 @@
 // 	return (0);
 // }
 
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	(void)argc;
-// 	(void)argv;
-// 	char	**my_env;
-// 	char	*line;
-// 	char	**segments;
-// 	t_cmd	*cmd_list;
+int	main(int argc, char **argv, char **envp)
+{
+	(void)argc;
+	(void)argv;
+	char	**my_env;
+	char	*line;
+	char	**segments;
+	t_cmd	*cmd_list;
 
-// 	my_env = ft_tabdup(envp);
-// 	setup_signals();
-// 	while (1)
-// 	{
-// 		line = read_command("minishell> ");
-// 		if (!line || line[0] == '\0')
-// 		{
-// 			free(line);
-// 			continue ;
-// 		}
-// 		segments = split_command(line);
-// 		cmd_list = struct_filer(segments);
-// 		g_last_exit_code = execute_command(cmd_list, &my_env);
-// 		free_all(cmd_list, segments, line);
-// 	}
-// 	ft_free_tab(my_env);
-// 	return (g_last_exit_code);
-// }
+	my_env = ft_tabdup(envp);
+	setup_signals();
+	while (1)
+	{
+		line = read_command("minishell> ");
+		if (!line || line[0] == '\0')
+		{
+			free(line);
+			continue ;
+		}
+		segments = split_command(line);
+		cmd_list = struct_filer(segments);
+		g_last_exit_code = execute_command(cmd_list, &my_env);
+		free_all(cmd_list, segments, line);
+	}
+	ft_free_tab(my_env);
+	return (g_last_exit_code);
+}

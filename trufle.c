@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/16 20:16:27 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/17 08:32:44 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,5 @@ int	main(int ac, char **av, char **envp)
 		free(input);
 	}
 	ft_free_tab(my_env);
-	return (0);
+	return (g_last_exit_code);
 }

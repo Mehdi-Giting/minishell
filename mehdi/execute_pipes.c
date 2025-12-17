@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 04:38:52 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/10 10:42:49 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/17 17:49:33 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,12 @@ static void	child_processe(t_cmd *current, int p_r, int *pipe_fd, char **my_env)
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
 	}
-	apply_redirections(current->redirections);
-	child_command(current, my_env);
+	if (apply_redirections(current->redirections))
+		exit(1);
+	if (current->is_builtin)
+		exit(exec_builtin(current, &my_env));
+	else
+		child_command(current, my_env);
 }
 
 static void	parrent_processe(t_cmd *current, int *p_r, int *pipe_fd)
@@ -68,42 +72,36 @@ int	execute_pipeline(t_cmd *cmds, char **my_env)
 	int		p_r;
 	int		pipe_fd[2];
 	pid_t	pid;
+	pid_t	last_pid;
+	pid_t	wpid;
 	int		status;
 	int		last_status;
-	int		killed_by_signal;
 
 	current = cmds;
 	p_r = -1;
-	killed_by_signal = 0;
+	last_pid = -1;
 	ignore_signals();
 	while (current)
 	{
 		fd_manager(current, pipe_fd);
 		pid = fork();
 		if (pid == -1)
-		{
-			perror("fork");
 			exit(1);
-		}
 		if (pid == 0)
 			child_processe(current, p_r, pipe_fd, my_env);
 		else
+		{
 			parrent_processe(current, &p_r, pipe_fd);
+			if (!current->next)
+				last_pid = pid;
+		}
 		current = current->next;
 	}
-    while (wait(&status) > 0)
+	while ((wpid = wait(&status)) > 0)
 	{
-		last_status = status;
-		if (WIFSIGNALED(status))
-            killed_by_signal = WTERMSIG(status);
+		if (wpid == last_pid)
+			last_status = status;
 	}
-	if (killed_by_signal)
-    {
-        if (killed_by_signal == SIGQUIT)
-            write(2, "Quit (core dumped)\n", 19);
-        else
-            write(1, "\n", 1);
-    }
 	setup_signals();
 	return (get_signal_exit_code(last_status));
 }
