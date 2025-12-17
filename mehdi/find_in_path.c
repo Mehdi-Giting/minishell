@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 23:09:02 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/15 15:18:28 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/17 17:54:26 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,14 @@ char	*find_in_path(const char *cmd)
 		}
 		else
 		{
-			ft_printf("command not found\n");
+			ft_putstr_fd("command not found\n", 2);
 			exit(127);
 		}
 	}
 	final_path = resolve_path_from_env(cmd);
 	if (!final_path)
 	{
-		ft_printf("command not found\n");
+		ft_putstr_fd("command not found\n", 2);
 		exit(127);
 	}
 	return (final_path);
