@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 12:39:49 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/16 20:11:47 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/17 06:31:43 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char **arg_list_to_argv(t_arg *args)
 	return (argv);
 }
 
-void	arg_add_back(t_arg **head, char *value)
+void	arg_add_back(t_arg **args, char *value)
 {
 	t_arg	*new;
 	t_arg	*tmp;
@@ -47,19 +47,23 @@ void	arg_add_back(t_arg **head, char *value)
 	new = malloc(sizeof(t_arg));
 	if (!new)
 		return ;
-	new->value = value;
-	new->next = NULL;
-	if (!*head)
+	new->value = ft_strdup(value);
+	if (!new->value)
 	{
-		*head = new;
+		free(new);
 		return ;
 	}
-	tmp = *head;
+	new->next = NULL;
+	if (!*args)
+	{
+		*args = new;
+		return ;
+	}
+	tmp = *args;
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
 }
-
 
 t_cmd *cmd_new(void)
 {

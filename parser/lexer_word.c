@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 08:46:11 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/16 20:23:23 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/17 06:53:14 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,26 @@ int	copy_quoted(char *input, int *j, char *buf, int *k)
 	return (0);
 }
 
+static int	copy_quoted_keep(char *input, int *j, char *buf, int *k)
+{
+	char	quote;
+
+	quote = input[*j];
+	buf[(*k)++] = input[(*j)++];   // copy opening quote
+	while (input[*j] && input[*j] != quote)
+		buf[(*k)++] = input[(*j)++];
+	if (input[*j] != quote)
+		return (-1);
+	buf[(*k)++] = input[(*j)++];   // copy closing quote
+	return (0);
+}
+
 t_token	*parse_word(char *input, int *i)
 {
 	char	*buf;
 	int		j;
 	int		k;
+	t_token	*new;
 
 	buf = malloc(ft_strlen(input + *i) + 1);
 	if (!buf)
@@ -60,7 +75,7 @@ t_token	*parse_word(char *input, int *i)
 	{
 		if (is_quote(input[j]))
 		{
-			if (copy_quoted(input, &j, buf, &k) == -1)
+			if (copy_quoted_keep(input, &j, buf, &k) == -1)
 				return (free(buf), NULL);
 		}
 		else
@@ -68,5 +83,7 @@ t_token	*parse_word(char *input, int *i)
 	}
 	buf[k] = '\0';
 	*i = j;
-	return (token_new(TOK_WORD, buf));
+	new = token_new(TOK_WORD, buf);
+	free(buf);
+	return (new);
 }

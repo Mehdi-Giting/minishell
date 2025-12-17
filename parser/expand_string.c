@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 17:07:37 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/16 19:14:35 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/17 06:58:33 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ char	*expand_string(char *s, char **env)
 	i = 0;
 	in_single = 0;
 	in_double = 0;
-	res = NULL;
+	res = ft_strdup("");
 	while (s[i])
 	{
-		if (handle_quote(s[i], &in_single, &in_double, &res))
+		if (handle_quote(s[i], &in_single, &in_double))
 			i++;
 		else if (s[i] == '$' && !in_single)
 			handle_dollar(s, &i, &res, env);

@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 12:40:03 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/16 17:07:10 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/17 06:25:32 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,6 @@ t_cmd	*parse_tokens(t_token *tokens)
 			handle_pipe(&tok, &args, &cmd);
 	}
 	cmd->tokens = arg_list_to_argv(args);
+	free_arg_list(args);
 	return (cmd_list);
 }

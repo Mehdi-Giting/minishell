@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 19:45:58 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/16 19:53:32 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/17 06:30:59 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,18 @@ void	free_cmds(t_cmd *cmds)
 		free_redirs(cmds->redirections);
 		free(cmds);
 		cmds = tmp;
+	}
+}
+
+void	free_arg_list(t_arg *args)
+{
+	t_arg	*tmp;
+
+	while (args)
+	{
+		tmp = args->next;
+		free(args->value);
+		free(args);
+		args = tmp;
 	}
 }

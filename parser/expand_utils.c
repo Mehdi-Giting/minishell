@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 19:09:54 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/16 19:11:59 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/17 06:38:42 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,16 @@ char	*expand_var(char *s, int *i, char **env)
 	return (ft_strdup(value));
 }
 
-int	handle_quote(char c, int *in_single, int *in_double, char **res)
+int	handle_quote(char c, int *in_single, int *in_double)
 {
 	if (c == '\'' && !(*in_double))
 	{
 		*in_single = !(*in_single);
-		*res = str_append(*res, "\'");
 		return (1);
 	}
 	if (c == '"' && !(*in_single))
 	{
 		*in_double = !(*in_double);
-		*res = str_append(*res, "\"");
 		return (1);
 	}
 	return (0);

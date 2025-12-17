@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/16 19:55:57 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/17 06:38:52 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ t_cmd	*parse_tokens(t_token *tokens);
 char	*expand_var(char *s, int *i, char **env);
 char 	*expand_string(char *s, char **env);
 void 	expand_cmds(t_cmd *cmds, char **env);
-int		handle_quote(char c, int *in_single, int *in_double, char **res);
+int		handle_quote(char c, int *in_single, int *in_double);
 void	handle_dollar(char *s, int *i, char **res, char **env);
 void	append_char(char c, char **res);
 char	*str_append(char *dst, char *src);
@@ -160,5 +160,6 @@ void	free_redirs(t_redir *redirs);
 void	free_cmds(t_cmd *cmds);
 int		is_builtin_name(char *cmd);
 void	detect_builtins(t_cmd *cmds);
+void	free_arg_list(t_arg *args);
 
 #endif
