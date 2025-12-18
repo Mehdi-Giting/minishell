@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/17 17:48:30 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/18 07:45:31 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,9 @@ typedef struct s_arg
 char	*find_in_path(const char *cmd);
 int		execute_command(t_cmd *cmd, char ***my_env);
 int		apply_redirections(t_redir *redirections);
-int		validate_redirections(t_redir *r);
 void	child_command(t_cmd *cmd, char **my_env);
 int		execute_pipeline(t_cmd *cmds, char **my_env);
+int		exec_builtin_with_redirections(t_cmd *cmd, char ***my_env);
 
 int		exec_builtin(t_cmd *cmd, char ***my_env);
 int		ft_pwd();

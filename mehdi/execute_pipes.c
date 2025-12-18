@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 04:38:52 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/17 17:49:33 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/18 09:23:35 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@ static void	fd_manager(t_cmd *current, int	*pipe_fd)
 
 static void	child_processe(t_cmd *current, int p_r, int *pipe_fd, char **my_env)
 {
+	int		i;
+	//char	**saved_tokens;
+
 	default_signals();
 	if (p_r != -1)
 		dup2(p_r, STDIN_FILENO);
@@ -47,8 +50,17 @@ static void	child_processe(t_cmd *current, int p_r, int *pipe_fd, char **my_env)
 	}
 	if (apply_redirections(current->redirections))
 		exit(1);
+	i = 0;
+	while (current->tokens[i] && (!current->tokens[i][0]))
+		i++;
+	if (!current->tokens[i])
+		exit(0);
 	if (current->is_builtin)
-		exit(exec_builtin(current, &my_env));
+	{
+		//saved_tokens = current->tokens;
+		current->tokens = &current->tokens[i];
+		exit(exec_builtin_with_redirections(current, &my_env));
+	}
 	else
 		child_command(current, my_env);
 }
