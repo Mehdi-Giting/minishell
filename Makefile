@@ -11,46 +11,55 @@ RM = rm -f
 # Dossier pour les fichiers objets
 OBJ_DIR = obj
 
-SRCS = trufle.c \
-	   mehdi/find_in_path.c \
-	   mehdi/execution.c \
-	   mehdi/redirections_exec.c \
-	   mehdi/execute_pipes.c \
-	   mehdi/signals.c \
-	   mehdi/exec_builtin.c \
-	   mehdi/builtin_list/ft_cd.c \
-	   mehdi/builtin_list/ft_echo.c \
-	   mehdi/builtin_list/ft_env.c \
-	   mehdi/builtin_list/ft_exit.c \
-	   mehdi/builtin_list/ft_export.c \
-	   mehdi/builtin_list/ft_export2.c \
-	   mehdi/builtin_list/ft_pwd.c \
-	   mehdi/builtin_list/ft_unset.c \
-	   mehdi/builtin_list/utils.c \
-	   kais/built.c \
-	   kais/read_command.c \
-	   kais/redir2.c \
-	   kais/redirection.c \
-	   kais/split.c \
-	   kais/tokens.c \
-	   kais/utils.c \
-	   kais/quotes.c \
-	   kais/expansion.c \
-	   parser/lexer_op.c \
-	   parser/lexer_utils.c \
-	   parser/lexer_word.c \
-	   parser/lexer.c \
-	   parser/token.c \
-	   parser/token_utils.c \
-	   parser/syntax_check.c \
-	   parser/parse_tokens.c \
-	   parser/parser_utils.c \
-	   parser/parser_redir.c \
-	   parser/expand_string.c \
-	   parser/expand_cmds.c \
-	   parser/expand_utils.c \
-	   parser/cleaner.c \
-	   parser/builtins.c \
+# Répertoires
+EXEC_DIR = src/execution
+BUILTIN_DIR = src/builtins
+
+# Fichiers principaux
+SRCS = main.c
+
+# Fichiers d'exécution
+SRCS += $(EXEC_DIR)/executor.c \
+        $(EXEC_DIR)/executor_simple.c \
+        $(EXEC_DIR)/executor_pipeline.c \
+		$(EXEC_DIR)/executor_pipeline_utils.c \
+        $(EXEC_DIR)/path_resolver.c \
+		$(EXEC_DIR)/path_error_exit.c \
+        $(EXEC_DIR)/redirections.c \
+        $(EXEC_DIR)/signals.c
+
+# Fichiers des builtins
+SRCS += $(BUILTIN_DIR)/builtin_executor.c \
+        $(BUILTIN_DIR)/builtin_cd.c \
+        $(BUILTIN_DIR)/builtin_echo.c \
+        $(BUILTIN_DIR)/builtin_env.c \
+        $(BUILTIN_DIR)/builtin_exit.c \
+        $(BUILTIN_DIR)/builtin_export.c \
+		$(BUILTIN_DIR)/builtin_export2.c \
+        $(BUILTIN_DIR)/builtin_pwd.c \
+        $(BUILTIN_DIR)/builtin_unset.c \
+        $(BUILTIN_DIR)/env_utils.c
+
+# Fichiers du parser (inchangés)
+PARSER_DIR = parser
+
+PARSER_SRCS = $(PARSER_DIR)/lexer/lexer.c \
+              $(PARSER_DIR)/lexer/lexer_operators.c \
+              $(PARSER_DIR)/lexer/lexer_words.c \
+              $(PARSER_DIR)/lexer/lexer_utils.c \
+              $(PARSER_DIR)/tokens/token.c \
+              $(PARSER_DIR)/tokens/token_utils.c \
+              $(PARSER_DIR)/parser/parser.c \
+              $(PARSER_DIR)/parser/parser_redirections.c \
+              $(PARSER_DIR)/parser/parser_utils.c \
+              $(PARSER_DIR)/parser/syntax_checker.c \
+              $(PARSER_DIR)/expander/expander.c \
+              $(PARSER_DIR)/expander/expander_string.c \
+              $(PARSER_DIR)/expander/expander_utils.c \
+              $(PARSER_DIR)/utils/builtin_detector.c \
+              $(PARSER_DIR)/utils/memory_cleaner.c
+
+SRCS += $(PARSER_SRCS)
 
 # Les .o gardent la même structure de dossiers dans obj/
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

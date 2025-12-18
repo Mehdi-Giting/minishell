@@ -3,177 +3,60 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfredj <kfredj@student.42.fr>              +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/04 18:52:26 by kfredj            #+#    #+#             */
-/*   Updated: 2025/12/01 18:30:00 by kfredj           ###   ########.fr       */
+/*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
+/*   Updated: 2025/12/18 18:18:59 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-// static void	print_tokens(t_cmd *cmd)
-// {
-// 	int	i;
-
-// 	printf("  Tokens: ");
-// 	if (!cmd->tokens || !cmd->tokens[0])
-// 	{
-// 		printf("(vide)\n");
-// 		return ;
-// 	}
-// 	i = 0;
-// 	while (cmd->tokens[i])
-// 	{
-// 		printf("[%s]", cmd->tokens[i]);
-// 		if (cmd->tokens[i + 1])
-// 			printf(" ");
-// 		i++;
-// 	}
-// 	printf("\n");
-// }
-
-// static void	print_redirections(t_cmd *cmd)
-// {
-// 	t_redir	*redir;
-// 	char	*type;
-
-// 	redir = cmd->redirections;
-// 	if (!redir)
-// 		return ;
-// 	printf("  Redirections:\n");
-// 	while (redir)
-// 	{
-// 		if (redir->type == R_IN)
-// 			type = "<";
-// 		else if (redir->type == R_OUT)
-// 			type = ">";
-// 		else if (redir->type == R_APPEND)
-// 			type = ">>";
-// 		else
-// 			type = "<<";
-// 		printf("    %s %s\n", type, redir->file ? redir->file : "(vide)");
-// 		redir = redir->next;
-// 	}
-// }
-
-// static void	print_command(t_cmd *cmd, int num)
-// {
-// 	printf("\n┌─ Commande #%d ", num);
-// 	printf("────────────────────────────────\n");
-// 	print_tokens(cmd);
-// 	print_redirections(cmd);
-// 	is_built_in(cmd);
-// 	printf("  Builtin: %s\n", cmd->is_builtin ? "OUI" : "NON");
-// 	printf("└────────────────────────────────────────────────\n");
-// }
-
-static void	free_all(t_cmd *cmd_list, char **segments, char *line)
+static void	process_input(char *input, char ***my_env)
 {
-	t_redir	*tmp_redir;
-	t_redir	*redir;
-	t_cmd	*tmp_cmd;
+	t_token	*tokens;
+	t_cmd	*cmds;
 
-	while (cmd_list)
+	tokens = lexer(input);
+	if (!tokens)
+		return ;
+	if (check_syntax(tokens) != 0)
 	{
-		tmp_cmd = cmd_list->next;
-		if (cmd_list->tokens)
-			free_tokens(cmd_list->tokens);
-		redir = cmd_list->redirections;
-		while (redir)
-		{
-			tmp_redir = redir->next;
-			if (redir->file)
-				free(redir->file);
-			free(redir);
-			redir = tmp_redir;
-		}
-		free(cmd_list);
-		cmd_list = tmp_cmd;
+		free_tokens_p(tokens);
+		return ;
 	}
-	if (segments)
-		free_tokens(segments);
-	if (line)
-		free(line);
+	cmds = parse_tokens(tokens);
+	free_tokens_p(tokens);
+	expand_cmds(cmds, *my_env);
+	detect_builtins(cmds);
+	g_last_exit_code = execute_command(cmds, my_env);
+	free_cmds(cmds);
 }
 
-// static void	process_line(char *line)
-// {
-// 	char	**segments;
-// 	t_cmd	*cmd_list;
-// 	t_cmd	*current;
-// 	int		cmd_num;
-
-// 	segments = split_command(line);
-// 	cmd_list = struct_filer(segments);
-// 	current = cmd_list;
-// 	cmd_num = 0;
-// 	while (current)
-// 	{
-// 		print_command(current, cmd_num);
-// 		if (current->next)
-// 			printf("        |\n        | PIPE\n        ↓\n");
-// 		current = current->next;
-// 		cmd_num++;
-// 	}
-// 	free_all(cmd_list, segments, line);
-// }
-
-// int	main(void)
-// {
-// 	char	*line;
-
-// 	printf("╔════════════════════════════════════════════════╗\n");
-// 	printf("║       🧪 MINISHELL - PARSER TEST 🧪           ║\n");
-// 	printf("╚════════════════════════════════════════════════╝\n");
-// 	printf("\n💡 Tapez 'exit' ou Ctrl+D pour quitter\n");
-// 	printf("📋 Voir test_commands.txt pour les tests\n");
-// 	printf("════════════════════════════════════════════════\n");
-// 	while (1)
-// 	{
-// 		line = read_command("\nminishell> ");
-// 		if (!line)
-// 			break ;
-// 		if (line[0] == '\0')
-// 		{
-// 			free(line);
-// 			continue ;
-// 		}
-// 		if (ft_strcmp(line, "exit") == 0)
-// 		{
-// 			free(line);
-// 			break ;
-// 		}
-// 		process_line(line);
-// 	}
-// 	printf("\n👋 Au revoir!\n");
-// 	return (0);
-// }
-
-int	main(int argc, char **argv, char **envp)
+static int	read_and_execute(char ***my_env)
 {
-	(void)argc;
-	(void)argv;
-	char	**my_env;
-	char	*line;
-	char	**segments;
-	t_cmd	*cmd_list;
+	char	*input;
 
+	input = readline("minishell$ ");
+	if (!input)
+		return (0);
+	if (*input)
+		add_history(input);
+	process_input(input, my_env);
+	free(input);
+	return (1);
+}
+
+int	main(int ac, char **av, char **envp)
+{
+	char	**my_env;
+
+	(void)ac;
+	(void)av;
 	my_env = ft_tabdup(envp);
 	setup_signals();
-	while (1)
-	{
-		line = read_command("minishell> ");
-		if (!line || line[0] == '\0')
-		{
-			free(line);
-			continue ;
-		}
-		segments = split_command(line);
-		cmd_list = struct_filer(segments);
-		g_last_exit_code = execute_command(cmd_list, &my_env);
-		free_all(cmd_list, segments, line);
-	}
+	while (read_and_execute(&my_env))
+		;
 	ft_free_tab(my_env);
 	return (g_last_exit_code);
 }
