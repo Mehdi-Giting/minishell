@@ -6,16 +6,12 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 06:37:05 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 17:58:43 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/19 23:55:21 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-/*
- * Skip empty tokens at the beginning of command
- * Returns index of first non-empty token
- */
 int	skip_empty_tokens(char **tokens)
 {
 	int	i;
@@ -26,16 +22,12 @@ int	skip_empty_tokens(char **tokens)
 	return (i);
 }
 
-/*
- * Execute command in child process
- * Applies redirections, finds path, and executes
- */
 void	execute_child_command(t_cmd *cmd, char **my_env)
 {
 	char	*path;
 	int		i;
 
-	if (apply_redirections(cmd->redirections))
+	if (apply_redirections(cmd->redirections, my_env))
 		exit(1);
 	i = skip_empty_tokens(cmd->tokens);
 	if (!cmd->tokens[i])
@@ -49,9 +41,6 @@ void	execute_child_command(t_cmd *cmd, char **my_env)
 	exit(126);
 }
 
-/*
- * Handle signal-based exit for child process
- */
 static void	handle_child_signals(int status)
 {
 	if (WIFSIGNALED(status))
@@ -63,10 +52,6 @@ static void	handle_child_signals(int status)
 	}
 }
 
-/*
- * Execute a simple command (no pipeline)
- * Forks, executes in child, waits for completion
- */
 int	execute_simple_command(t_cmd *cmd, char **my_env)
 {
 	pid_t	child;

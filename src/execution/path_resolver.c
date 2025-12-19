@@ -6,23 +6,17 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 23:09:02 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/18 16:54:40 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/19 23:55:34 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-/*
- * Check if command contains a slash (absolute or relative path)
- */
 static int	is_path_command(const char *cmd)
 {
 	return (ft_strchr(cmd, '/') != NULL);
 }
 
-/*
- * Resolve path from PATH environment variable
- */
 static char	*search_in_path_env(const char *cmd)
 {
 	char	**path_dirs;
@@ -52,9 +46,6 @@ static char	*search_in_path_env(const char *cmd)
 	return (ft_free_tab(path_dirs), NULL);
 }
 
-/*
- * Handle absolute or relative path resolution
- */
 static char	*resolve_absolute_path(const char *cmd)
 {
 	struct stat	path_stat;
@@ -78,10 +69,6 @@ static char	*resolve_absolute_path(const char *cmd)
 	return (final_path);
 }
 
-/*
- * Main path resolution function
- * Returns executable path or exits with error
- */
 char	*resolve_command_path(const char *cmd)
 {
 	char	*final_path;

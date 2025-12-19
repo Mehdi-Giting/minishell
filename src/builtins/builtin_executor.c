@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 16:11:20 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 18:00:27 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/18 19:30:19 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	execute_builtin_with_redirections(t_cmd *cmd, char ***my_env)
 		return (0);
 	if (save_fds(&saved_stdin, &saved_stdout))
 		return (1);
-	if (apply_redirections(cmd->redirections))
+	if (apply_redirections(cmd->redirections, *my_env))
 	{
 		restore_fds(saved_stdin, saved_stdout);
 		return (1);

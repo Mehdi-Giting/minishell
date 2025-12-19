@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 04:38:52 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 17:18:00 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/18 19:29:34 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	execute_pipeline_child(t_cmd *cmd, int p_r, int *pfd, char **env)
 
 	default_signals();
 	setup_child_fds(p_r, cmd, pfd);
-	if (apply_redirections(cmd->redirections))
+	if (apply_redirections(cmd->redirections, env))
 		exit(1);
 	i = skip_empty_tokens(cmd->tokens);
 	if (!cmd->tokens[i])

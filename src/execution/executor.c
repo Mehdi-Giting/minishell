@@ -6,16 +6,12 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 06:37:05 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 16:57:50 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/19 23:55:04 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-/*
- * Main execution entry point
- * Decides between pipeline, builtin, or simple command execution
- */
 int	execute_command(t_cmd *cmd, char ***my_env)
 {
 	int	status;

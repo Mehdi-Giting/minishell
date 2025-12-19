@@ -6,11 +6,25 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 15:53:00 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 17:56:42 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/19 23:45:52 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+static int	has_quotes(const char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'' || str[i] == '"')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 static t_redir	*redir_new(t_redir_type type, char *file)
 {
@@ -26,6 +40,7 @@ static t_redir	*redir_new(t_redir_type type, char *file)
 		free(new);
 		return (NULL);
 	}
+	new->quoted = 0;
 	new->next = NULL;
 	return (new);
 }
@@ -38,6 +53,8 @@ void	add_redirection(t_cmd *cmd, t_redir_type type, char *file)
 	new = redir_new(type, file);
 	if (!new)
 		return ;
+	if (type == R_HEREDOC && has_quotes(file))
+		new->quoted = 1;
 	if (!cmd->redirections)
 	{
 		cmd->redirections = new;
