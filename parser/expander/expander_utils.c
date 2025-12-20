@@ -6,15 +6,40 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 19:09:54 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 17:56:24 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/20 09:07:32 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char	*expand_var(char *s, int *i, char **env)
+static char	*extract_var_name(char *s, int *i)
 {
 	int		start;
+	char	*key;
+
+	if (s[*i] == '{')
+	{
+		(*i)++;
+		start = *i;
+		while (s[*i] && s[*i] != '}')
+			(*i)++;
+		if (s[*i] != '}')
+			return (NULL);
+		key = ft_substr(s, start, *i - start);
+		(*i)++;
+		return (key);
+	}
+	else
+	{
+		start = *i;
+		while (ft_isalnum(s[*i]) || s[*i] == '_')
+			(*i)++;
+		return (ft_substr(s, start, *i - start));
+	}
+}
+
+char	*expand_var(char *s, int *i, char **env)
+{
 	char	*key;
 	char	*value;
 
@@ -24,14 +49,11 @@ char	*expand_var(char *s, int *i, char **env)
 		(*i)++;
 		return (ft_itoa(g_last_exit_code));
 	}
-	if (!ft_isalpha(s[*i]) && s[*i] != '_')
+	if (!ft_isalpha(s[*i]) && s[*i] != '_' && s[*i] != '{')
 		return (ft_strdup("$"));
-	start = *i;
-	while (ft_isalnum(s[*i]) || s[*i] == '_')
-		(*i)++;
-	key = ft_substr(s, start, *i - start);
+	key = extract_var_name(s, i);
 	if (!key)
-		return (NULL);
+		return (ft_strdup(""));
 	value = ft_getenv(key, env);
 	free(key);
 	if (!value)
