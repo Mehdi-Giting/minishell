@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 15:53:00 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/19 23:45:52 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 13:35:08 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static t_redir	*redir_new(t_redir_type type, char *file)
 	}
 	new->quoted = 0;
 	new->next = NULL;
+	new->heredoc_fd = -1;
 	return (new);
 }
 

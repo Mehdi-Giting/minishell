@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 19:00:00 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/24 11:46:27 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 13:36:19 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,30 @@ int	handle_heredoc(t_redir *redir, char **env)
 	free(clean_delim);
 	close(pipe_fd[1]);
 	return (pipe_fd[0]);
+}
+
+void	process_all_heredocs(t_cmd *cmds, char **env)
+{
+	t_cmd	*current;
+	t_redir	*redir;
+
+	current = cmds;
+	while (current)
+	{
+		redir = current->redirections;
+		while (redir)
+		{
+			if (redir->type == R_HEREDOC)
+			{
+				redir->heredoc_fd = handle_heredoc(redir, env);
+				if (redir->heredoc_fd == -1)
+				{
+					write(2, "minishell: heredoc error\n", 25);
+					return ;
+				}
+			}
+			redir = redir->next;
+		}
+		current = current->next;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 22:16:34 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/19 23:53:08 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 13:42:22 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,17 @@ static int	open_files(t_redir *current)
 	return (0);
 }
 
-static int	apply_heredoc(t_redir *redir, char **env)
+static int	apply_heredoc(t_redir *redir)
 {
-	int	fd;
-
-	fd = handle_heredoc(redir, env);
-	if (fd == -1)
+	if (redir->heredoc_fd == -1)
 		return (1);
-	dup2(fd, STDIN_FILENO);
-	close(fd);
+	dup2(redir->heredoc_fd, STDIN_FILENO);
+	close(redir->heredoc_fd);
+	redir->heredoc_fd = -1;
 	return (0);
 }
 
-int	apply_redirections(t_redir *redirections, char **env)
+int	apply_redirections(t_redir *redirections)
 {
 	t_redir	*current;
 
@@ -60,7 +58,7 @@ int	apply_redirections(t_redir *redirections, char **env)
 	{
 		if (current->type == R_HEREDOC)
 		{
-			if (apply_heredoc(current, env))
+			if (apply_heredoc(current))
 				return (1);
 		}
 		else

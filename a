@@ -1,0 +1,10 @@
+Makefile
+a
+include
+libft
+ls
+main.c
+minishell
+obj
+parser
+src

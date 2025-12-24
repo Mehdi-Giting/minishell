@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/19 23:49:04 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 13:43:03 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_redir
 	char			*file;
 	t_redir_type	type;
 	t_redir			*next;
+	int				heredoc_fd;
 	int				quoted;
 }	t_redir;
 
@@ -85,7 +86,7 @@ int		execute_simple_command(t_cmd *cmd, char **my_env);
 void	execute_child_command(t_cmd *cmd, char **my_env);
 int		execute_pipeline(t_cmd *cmds, char **my_env);
 char	*resolve_command_path(const char *cmd);
-int		apply_redirections(t_redir *redirections, char **env);
+int		apply_redirections(t_redir *redirections);
 void	setup_signals(void);
 void	ignore_signals(void);
 void	default_signals(void);
@@ -141,5 +142,6 @@ void	free_arg_list(t_arg *args);
 void	print_path_error_and_exit(const char *cmd);
 void	print_sorted_env(char **env);
 int		handle_heredoc(t_redir *redir, char **env);
+void	process_all_heredocs(t_cmd *cmds, char **env);
 
 #endif

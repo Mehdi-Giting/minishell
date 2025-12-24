@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/18 18:18:59 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 13:40:50 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static void	process_input(char *input, char ***my_env)
 	free_tokens_p(tokens);
 	expand_cmds(cmds, *my_env);
 	detect_builtins(cmds);
+	process_all_heredocs(cmds, *my_env);
 	g_last_exit_code = execute_command(cmds, my_env);
 	free_cmds(cmds);
 }

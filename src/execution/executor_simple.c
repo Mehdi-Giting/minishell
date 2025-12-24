@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 06:37:05 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/24 11:45:25 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 13:42:55 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	execute_child_command(t_cmd *cmd, char **my_env)
 	char	*path;
 	int		i;
 
-	if (apply_redirections(cmd->redirections, my_env))
+	if (apply_redirections(cmd->redirections))
 		exit(1);
 	i = skip_empty_tokens(cmd->tokens);
 	if (!cmd->tokens[i])
