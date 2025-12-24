@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 19:00:00 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/19 23:54:06 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 11:46:27 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,30 +35,22 @@ static char	*remove_delimiter_quotes(const char *delim)
 	return (result);
 }
 
-static int	create_heredoc_file(void)
+static void	write_heredoc_line(int fd, char *line, t_redir *redir, char **env)
 {
-	char	*template;
-	int		fd;
+	char	*expanded;
 
-	template = ft_strdup("/tmp/.heredoc_XXXXXX");
-	if (!template)
-		return (-1);
-	fd = mkstemp(template);
-	if (fd == -1)
-	{
-		free(template);
-		perror("mkstemp");
-		return (-1);
-	}
-	unlink(template);
-	free(template);
-	return (fd);
+	if (!redir->quoted)
+		expanded = expand_string(line, env);
+	else
+		expanded = ft_strdup(line);
+	write(fd, expanded, ft_strlen(expanded));
+	write(fd, "\n", 1);
+	free(expanded);
 }
 
 static int	read_heredoc_lines(int fd, char *delim, t_redir *redir, char **env)
 {
 	char	*line;
-	char	*expanded;
 
 	while (1)
 	{
@@ -68,13 +60,7 @@ static int	read_heredoc_lines(int fd, char *delim, t_redir *redir, char **env)
 			free(line);
 			break ;
 		}
-		if (!redir->quoted)
-			expanded = expand_string(line, env);
-		else
-			expanded = ft_strdup(line);
-		write(fd, expanded, ft_strlen(expanded));
-		write(fd, "\n", 1);
-		free(expanded);
+		write_heredoc_line(fd, line, redir, env);
 		free(line);
 	}
 	return (0);
@@ -82,20 +68,23 @@ static int	read_heredoc_lines(int fd, char *delim, t_redir *redir, char **env)
 
 int	handle_heredoc(t_redir *redir, char **env)
 {
-	int		fd_write;
-	int		fd_read;
+	int		pipe_fd[2];
 	char	*clean_delim;
 
-	fd_write = create_heredoc_file();
-	if (fd_write == -1)
+	if (pipe(pipe_fd) == -1)
+	{
+		perror("pipe");
 		return (-1);
+	}
 	clean_delim = remove_delimiter_quotes(redir->file);
 	if (!clean_delim)
-		return (close(fd_write), -1);
-	read_heredoc_lines(fd_write, clean_delim, redir, env);
+	{
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		return (-1);
+	}
+	read_heredoc_lines(pipe_fd[1], clean_delim, redir, env);
 	free(clean_delim);
-	fd_read = dup(fd_write);
-	lseek(fd_read, 0, SEEK_SET);
-	close(fd_write);
-	return (fd_read);
+	close(pipe_fd[1]);
+	return (pipe_fd[0]);
 }

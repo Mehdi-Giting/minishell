@@ -6,15 +6,12 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 00:15:26 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 15:51:51 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 11:57:35 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-/*
- * Extract key and value from argument (split on '=')
- */
 static char	**extract_key_value(char *arg)
 {
 	char	**result;
@@ -32,9 +29,6 @@ static char	**extract_key_value(char *arg)
 	return (result);
 }
 
-/*
- * Find index of key in environment
- */
 static int	find_key_index(char **env, char *key)
 {
 	int	i;
@@ -52,24 +46,29 @@ static int	find_key_index(char **env, char *key)
 	return (-1);
 }
 
-/*
- * Export a single variable
- */
+static int	print_export_error(char *arg)
+{
+	write(2, "minishell: export: `", 20);
+	write(2, arg, ft_strlen(arg));
+	write(2, "': not a valid identifier\n", 26);
+	return (1);
+}
+
 static int	export_one_variable(char *arg, char ***my_env)
 {
 	char	**key_value;
 	int		index;
 
 	if (!is_valid_identifier(arg))
-	{
-		write(2, "minishell: export: `", 20);
-		write(2, arg, ft_strlen(arg));
-		write(2, "': not a valid identifier\n", 26);
-		return (1);
-	}
+		return (print_export_error(arg));
 	key_value = extract_key_value(arg);
 	if (!key_value)
+	{
+		index = find_key_index(*my_env, arg);
+		if (index < 0)
+			*my_env = ft_tabdup_add(*my_env, arg);
 		return (0);
+	}
 	index = find_key_index(*my_env, key_value[0]);
 	if (index >= 0)
 	{
@@ -82,11 +81,6 @@ static int	export_one_variable(char *arg, char ***my_env)
 	return (0);
 }
 
-/*
- * Export builtin implementation
- * Without arguments: prints all variables in export format
- * With arguments: exports variables to environment
- */
 int	builtin_export(char **argv, char ***my_env)
 {
 	int		i;

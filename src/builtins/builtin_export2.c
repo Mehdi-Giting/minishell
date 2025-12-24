@@ -6,16 +6,12 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 15:50:22 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 15:54:42 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 13:00:18 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-/*
- * Check if identifier is valid for export
- * Must start with letter or underscore, followed by alphanumeric or underscore
- */
 int	is_valid_identifier(char *str)
 {
 	int	i;
@@ -34,9 +30,6 @@ int	is_valid_identifier(char *str)
 	return (1);
 }
 
-/*
- * Bubble sort environment variables
- */
 void	sort_env(char **env)
 {
 	int		i;
@@ -62,9 +55,6 @@ void	sort_env(char **env)
 	}
 }
 
-/*
- * Print environment variable in export format
- */
 void	print_export_var(char *env_var)
 {
 	char	*equal_sign;
@@ -86,9 +76,6 @@ void	print_export_var(char *env_var)
 	}
 }
 
-/*
- * Print all environment variables in sorted export format
- */
 void	print_sorted_env(char **env)
 {
 	int	i;

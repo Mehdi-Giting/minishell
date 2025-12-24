@@ -6,15 +6,12 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 16:11:20 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 19:30:19 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 11:54:47 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-/*
- * Dispatch to appropriate builtin function
- */
 int	dispatch_builtin(t_cmd *cmd, char ***envp)
 {
 	if (ft_strcmp(cmd->tokens[0], "cd") == 0)
@@ -23,7 +20,7 @@ int	dispatch_builtin(t_cmd *cmd, char ***envp)
 		return (builtin_echo(cmd->tokens));
 	if (ft_strcmp(cmd->tokens[0], "pwd") == 0)
 		return (builtin_pwd());
-	if (ft_strcmp(cmd->tokens[0], "export") == 0 && cmd->next == NULL)
+	if (ft_strcmp(cmd->tokens[0], "export") == 0)
 		return (builtin_export(cmd->tokens, envp));
 	if (ft_strcmp(cmd->tokens[0], "unset") == 0)
 		return (builtin_unset(cmd->tokens, envp));
@@ -34,9 +31,6 @@ int	dispatch_builtin(t_cmd *cmd, char ***envp)
 	return (1);
 }
 
-/*
- * Save file descriptors before applying redirections
- */
 static int	save_fds(int *saved_stdin, int *saved_stdout)
 {
 	*saved_stdin = dup(STDIN_FILENO);
@@ -52,9 +46,6 @@ static int	save_fds(int *saved_stdin, int *saved_stdout)
 	return (0);
 }
 
-/*
- * Restore file descriptors after builtin execution
- */
 static void	restore_fds(int saved_stdin, int saved_stdout)
 {
 	dup2(saved_stdin, STDIN_FILENO);
@@ -63,9 +54,6 @@ static void	restore_fds(int saved_stdin, int saved_stdout)
 	close(saved_stdout);
 }
 
-/*
- * Execute builtin with proper redirection handling
- */
 int	execute_builtin_with_redirections(t_cmd *cmd, char ***my_env)
 {
 	int		saved_stdin;

@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 19:08:52 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 17:56:26 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 11:50:52 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,11 @@ static void	expand_redirs(t_redir *r, char **env)
 
 	while (r)
 	{
+		if (r->type == R_HEREDOC)
+		{
+			r = r->next;
+			continue ;
+		}
 		expanded = expand_string(r->file, env);
 		free(r->file);
 		r->file = expanded;

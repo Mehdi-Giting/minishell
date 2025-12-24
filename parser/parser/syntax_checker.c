@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 10:36:34 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 18:10:32 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 11:47:43 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,25 +36,25 @@ int	check_syntax(t_token *token)
 {
 	t_token	*tmp;
 
+	if (!token || token->type == TOK_PIPE)
+		return (print_pipe_error() * (token != NULL));
 	tmp = token;
-	if (!token)
-		return (0);
-	if (tmp->type == TOK_PIPE)
-		return (print_pipe_error());
-	while (tmp->next)
+	while (tmp)
 	{
-		if (tmp->type == TOK_PIPE && tmp->next->type == TOK_PIPE)
+		if (tmp->type == TOK_PIPE && tmp->next && tmp->next->type == TOK_PIPE)
 			return (print_pipe_error());
 		if (is_redir(tmp->type))
 		{
-			if (!tmp->next)
+			if (!tmp->next || tmp->next->type != TOK_WORD)
 				return (print_newline_error());
 			if (tmp->next->type == TOK_PIPE)
 				return (print_pipe_error());
 		}
+		if (!tmp->next && tmp->type == TOK_PIPE)
+			return (print_pipe_error());
+		if (!tmp->next && is_redir(tmp->type))
+			return (print_newline_error());
 		tmp = tmp->next;
 	}
-	if (tmp->type == TOK_PIPE)
-		return (print_pipe_error());
 	return (0);
 }
