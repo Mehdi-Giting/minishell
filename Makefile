@@ -39,7 +39,7 @@ SRCS += $(BUILTIN_DIR)/builtin_executor.c \
 		$(BUILTIN_DIR)/builtin_export2.c \
         $(BUILTIN_DIR)/builtin_pwd.c \
         $(BUILTIN_DIR)/builtin_unset.c \
-        $(BUILTIN_DIR)/env_utils.c
+        $(BUILTIN_DIR)/builtin_env_utils.c
 
 # Fichiers du parser (inchangés)
 PARSER_DIR = parser

@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 00:15:26 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/24 11:57:35 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 14:58:51 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,18 @@ static char	**extract_key_value(char *arg)
 	if (!result)
 		return (NULL);
 	result[0] = ft_substr(arg, 0, equal_sign - arg);
+	if (!result[0])
+	{
+		free(result);
+		return (NULL);
+	}
 	result[1] = ft_strdup(equal_sign + 1);
+	if (!result[1])
+	{
+		free(result[0]);
+		free(result);
+		return (NULL);
+	}
 	result[2] = NULL;
 	return (result);
 }

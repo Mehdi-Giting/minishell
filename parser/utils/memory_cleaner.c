@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 19:45:58 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 17:57:01 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 14:58:14 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ void	free_redirs(t_redir *redirs)
 	while (redirs)
 	{
 		tmp = redirs->next;
+		if (redirs->heredoc_fd != -1)
+			close(redirs->heredoc_fd);
 		free(redirs->file);
 		free(redirs);
 		redirs = tmp;

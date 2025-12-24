@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_utils.c                                        :+:      :+:    :+:   */
+/*   builtin_env_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 04:14:24 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 15:55:09 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 15:15:54 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,24 +92,24 @@ void	ft_setenv(char *key, char *value, char ***my_env)
 	int		len;
 	char	*new;
 
+	if (!key || !value || !my_env || !*my_env)
+		return ;
 	i = 0;
 	len = ft_strlen(key);
 	new = ft_replace_env(key, value);
-	if (!key || !value || !my_env || !*my_env)
+	if (!new)
 		return ;
 	while ((*my_env)[i])
 	{
 		if (ft_strncmp((*my_env)[i], key, len) == 0)
-		{
 			if ((*my_env)[i][len] == '=')
 			{
 				free((*my_env)[i]);
 				(*my_env)[i] = new;
 				return ;
 			}
-		}
 		i++;
 	}
-	*my_env = ft_tabdup_add(*my_env, ft_replace_env(key, value));
+	*my_env = ft_tabdup_add(*my_env, new);
 	free(new);
 }

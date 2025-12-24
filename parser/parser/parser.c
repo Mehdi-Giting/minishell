@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 12:40:03 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 17:56:47 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 15:07:22 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ static void	handle_redir(t_token **tok, t_cmd *cmd)
 static void	handle_pipe(t_token **tok, t_arg **args, t_cmd **cmd)
 {
 	(*cmd)->tokens = arg_list_to_argv(*args);
+	free_arg_list(*args);
 	*args = NULL;
 	(*cmd)->next = cmd_new();
 	*cmd = (*cmd)->next;

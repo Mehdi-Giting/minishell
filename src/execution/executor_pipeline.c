@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 04:38:52 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/24 13:42:45 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/24 15:12:33 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	execute_pipeline(t_cmd *cmds, char **my_env)
 		setup_pipe(current, pipe_fd);
 		pid = fork();
 		if (pid == -1)
-			exit(1);
+			return (perror("fork"), setup_signals(), 1);
 		if (pid == 0)
 			execute_pipeline_child(current, prev_read, pipe_fd, my_env);
 		cleanup_parent_fds(current, &prev_read, pipe_fd);
