@@ -85,7 +85,7 @@ int		execute_command(t_cmd *cmd, char ***my_env);
 int		execute_simple_command(t_cmd *cmd, char **my_env);
 void	execute_child_command(t_cmd *cmd, char **my_env);
 int		execute_pipeline(t_cmd *cmds, char **my_env);
-char	*resolve_command_path(const char *cmd);
+char	*resolve_command_path(const char *cmd, char **my_env);
 int		apply_redirections(t_redir *redirections);
 void	setup_signals(void);
 void	ignore_signals(void);

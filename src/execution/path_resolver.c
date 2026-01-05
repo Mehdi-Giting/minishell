@@ -17,16 +17,16 @@ static int	is_path_command(const char *cmd)
 	return (ft_strchr(cmd, '/') != NULL);
 }
 
-static char	*search_in_path_env(const char *cmd)
+static char	*search_in_path_env(const char *cmd, char **my_env)
 {
 	char	**path_dirs;
 	char	*tmp;
 	char	*full_path;
 	int		i;
 
-	if (!getenv("PATH"))
+	if (!ft_getenv("PATH", my_env))
 		return (NULL);
-	path_dirs = ft_split(getenv("PATH"), ':');
+	path_dirs = ft_split(ft_getenv("PATH", my_env), ':');
 	if (!path_dirs)
 		return (NULL);
 	i = 0;
@@ -69,7 +69,7 @@ static char	*resolve_absolute_path(const char *cmd)
 	return (final_path);
 }
 
-char	*resolve_command_path(const char *cmd)
+char	*resolve_command_path(const char *cmd, char **my_env)
 {
 	char	*final_path;
 
@@ -77,7 +77,7 @@ char	*resolve_command_path(const char *cmd)
 		return (NULL);
 	if (is_path_command(cmd))
 		return (resolve_absolute_path(cmd));
-	final_path = search_in_path_env(cmd);
+	final_path = search_in_path_env(cmd, my_env);
 	if (!final_path)
 	{
 		ft_putstr_fd("minishell: ", 2);
