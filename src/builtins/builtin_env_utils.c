@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 04:14:24 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/24 15:15:54 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/05 09:06:19 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,30 +86,26 @@ char	*ft_getenv(const char *key, char **my_env)
 	return (NULL);
 }
 
-void	ft_setenv(char *key, char *value, char ***my_env)
+int	ft_setenv(char *key, char *value, char ***my_env)
 {
 	int		i;
 	int		len;
 	char	*new;
 
 	if (!key || !value || !my_env || !*my_env)
-		return ;
+		return (1);
 	i = 0;
 	len = ft_strlen(key);
 	new = ft_replace_env(key, value);
 	if (!new)
-		return ;
+		return (1);
 	while ((*my_env)[i])
 	{
 		if (ft_strncmp((*my_env)[i], key, len) == 0)
 			if ((*my_env)[i][len] == '=')
-			{
-				free((*my_env)[i]);
-				(*my_env)[i] = new;
-				return ;
-			}
+				return (free((*my_env)[i]), (*my_env)[i] = new, 1);
 		i++;
 	}
 	*my_env = ft_tabdup_add(*my_env, new);
-	free(new);
+	return (free(new), 1);
 }
