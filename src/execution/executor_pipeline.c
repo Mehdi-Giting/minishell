@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_pipeline.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ellabiad <ellabiad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 04:38:52 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/24 15:12:33 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/05 16:16:32 by ellabiad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,24 +44,26 @@ void	setup_child_fds(int prev_read, t_cmd *current, int *pipe_fd)
 	}
 }
 
-void	execute_pipeline_child(t_cmd *cmd, int p_r, int *pfd, char **env)
+void	execute_pipeline_child(t_cmd *all, t_cmd *cur, t_pipe_data p,
+	char **env)
 {
 	int	i;
 
 	default_signals();
-	setup_child_fds(p_r, cmd, pfd);
-	if (apply_redirections(cmd->redirections))
+	close_other_heredocs(all, cur);
+	setup_child_fds(p.prev_read, cur, p.pipe_fd);
+	if (apply_redirections(cur->redirections))
 		exit(1);
-	i = skip_empty_tokens(cmd->tokens);
-	if (!cmd->tokens[i])
+	i = skip_empty_tokens(cur->tokens);
+	if (!cur->tokens[i])
 		exit(0);
-	if (cmd->is_builtin)
+	if (cur->is_builtin)
 	{
-		cmd->tokens = &cmd->tokens[i];
-		exit(execute_builtin_with_redirections(cmd, &env));
+		cur->tokens = &cur->tokens[i];
+		exit(exec_builtin_with_fds(cur, &env, i));
 	}
 	else
-		execute_child_command(cmd, env);
+		execute_child_command(cur, env);
 }
 
 void	cleanup_parent_fds(t_cmd *current, int *prev_read, int *pipe_fd)
@@ -79,25 +81,24 @@ void	cleanup_parent_fds(t_cmd *current, int *prev_read, int *pipe_fd)
 
 int	execute_pipeline(t_cmd *cmds, char **my_env)
 {
-	t_cmd	*current;
-	int		prev_read;
-	int		pipe_fd[2];
-	pid_t	pid;
-	pid_t	last_pid;
+	t_cmd		*current;
+	t_pipe_data	p;
+	pid_t		pid;
+	pid_t		last_pid;
 
 	current = cmds;
-	prev_read = -1;
+	p.prev_read = -1;
 	last_pid = -1;
 	ignore_signals();
 	while (current)
 	{
-		setup_pipe(current, pipe_fd);
+		setup_pipe(current, p.pipe_fd);
 		pid = fork();
 		if (pid == -1)
 			return (perror("fork"), setup_signals(), 1);
 		if (pid == 0)
-			execute_pipeline_child(current, prev_read, pipe_fd, my_env);
-		cleanup_parent_fds(current, &prev_read, pipe_fd);
+			execute_pipeline_child(cmds, current, p, my_env);
+		cleanup_parent_fds(current, &p.prev_read, p.pipe_fd);
 		if (!current->next)
 			last_pid = pid;
 		current = current->next;

@@ -27,7 +27,8 @@ SRCS += $(EXEC_DIR)/executor.c \
 		$(EXEC_DIR)/path_error_exit.c \
         $(EXEC_DIR)/redirections.c \
         $(EXEC_DIR)/signals.c \
-		$(EXEC_DIR)/heredoc.c
+		$(EXEC_DIR)/heredoc.c \
+        $(EXEC_DIR)/heredoc_utils.c
 
 # Fichiers des builtins
 SRCS += $(BUILTIN_DIR)/builtin_executor.c \

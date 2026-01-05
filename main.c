@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ellabiad <ellabiad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:03:44 by mehdi             #+#    #+#             */
-/*   Updated: 2025/12/24 13:40:50 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/05 16:13:24 by ellabiad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ static void	process_input(char *input, char ***my_env)
 	detect_builtins(cmds);
 	process_all_heredocs(cmds, *my_env);
 	g_last_exit_code = execute_command(cmds, my_env);
+	close_all_heredoc_fds(cmds);
 	free_cmds(cmds);
 }
 

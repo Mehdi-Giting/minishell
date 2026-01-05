@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ellabiad <ellabiad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 03:06:23 by mehdi             #+#    #+#             */
-/*   Updated: 2026/01/05 09:05:11 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/05 16:13:50 by ellabiad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,12 @@ typedef struct s_arg
 	struct s_arg	*next;
 }	t_arg;
 
+typedef struct s_pipe_data
+{
+	int	prev_read;
+	int	pipe_fd[2];
+}	t_pipe_data;
+
 int		execute_command(t_cmd *cmd, char ***my_env);
 int		execute_simple_command(t_cmd *cmd, char **my_env);
 void	execute_child_command(t_cmd *cmd, char **my_env);
@@ -143,5 +149,8 @@ void	print_path_error_and_exit(const char *cmd);
 void	print_sorted_env(char **env);
 int		handle_heredoc(t_redir *redir, char **env);
 void	process_all_heredocs(t_cmd *cmds, char **env);
+int		exec_builtin_with_fds(t_cmd *cmd, char ***my_env, int i);
+void	close_other_heredocs(t_cmd *all_cmds, t_cmd *current);
+void	close_all_heredoc_fds(t_cmd *cmds);
 
 #endif

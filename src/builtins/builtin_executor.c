@@ -54,17 +54,13 @@ static void	restore_fds(int saved_stdin, int saved_stdout)
 	close(saved_stdout);
 }
 
-int	execute_builtin_with_redirections(t_cmd *cmd, char ***my_env)
+int	exec_builtin_with_fds(t_cmd *cmd, char ***my_env, int i)
 {
 	int		saved_stdin;
 	int		saved_stdout;
 	int		status;
-	int		i;
 	char	**saved_tokens;
 
-	i = skip_empty_tokens(cmd->tokens);
-	if (!cmd->tokens[i])
-		return (0);
 	if (save_fds(&saved_stdin, &saved_stdout))
 		return (1);
 	if (apply_redirections(cmd->redirections))
@@ -78,4 +74,24 @@ int	execute_builtin_with_redirections(t_cmd *cmd, char ***my_env)
 	cmd->tokens = saved_tokens;
 	restore_fds(saved_stdin, saved_stdout);
 	return (status);
+}
+
+int	execute_builtin_with_redirections(t_cmd *cmd, char ***my_env)
+{
+	int		i;
+	char	**saved_tokens;
+	int		status;
+
+	i = skip_empty_tokens(cmd->tokens);
+	if (!cmd->tokens[i])
+		return (0);
+	if (ft_strcmp(cmd->tokens[i], "exit") == 0)
+	{
+		saved_tokens = cmd->tokens;
+		cmd->tokens = &cmd->tokens[i];
+		status = builtin_exit(cmd->tokens);
+		cmd->tokens = saved_tokens;
+		return (status);
+	}
+	return (exec_builtin_with_fds(cmd, my_env, i));
 }

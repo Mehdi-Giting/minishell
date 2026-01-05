@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ellabiad <ellabiad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 23:05:58 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/18 11:48:53 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/05 16:33:49 by ellabiad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,11 @@ static int	is_numeric_arg(char *str)
 
 int	builtin_exit(char **argv)
 {
+	ft_putstr_fd("exit\n", 2);
 	if (!argv[1])
 	{
 		ft_printf("%s\n", argv[0]);
-		exit(0);
+		exit(g_last_exit_code);
 	}
 	else if (argv[2])
 	{
