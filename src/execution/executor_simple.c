@@ -32,7 +32,7 @@ void	execute_child_command(t_cmd *cmd, char **my_env)
 	i = skip_empty_tokens(cmd->tokens);
 	if (!cmd->tokens[i])
 		exit(0);
-	path = resolve_command_path(cmd->tokens[i]);
+	path = resolve_command_path(cmd->tokens[i], my_env);
 	if (!path)
 		exit(127);
 	execve(path, &cmd->tokens[i], my_env);
